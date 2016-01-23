@@ -6,16 +6,19 @@ function getMessage(a, b) {
       return "Переданное GIF-изображение не анимировано";
     }
   }
+
   if (typeof(a) === "number") {
     return "Переданное SVG-изображение содержит " + a + " объектов и " + b * 4 + " аттрибутов";
   }
-  if (typeof(a) === "object") {
+
+  if (typeof(a) === "object" && typeof(b) !== "object") {
     var sum = 0;
     for (var i = 0; i < a.length; i++) {
       sum += a[i];
     }
     return "Количество красных точек во всех строчках изображения: " + sum;
   }
+
   if (typeof(a) === "object" && typeof(b) === "object") {
     var square = 0;
     for (i = 0; i < a.length; i++) {
