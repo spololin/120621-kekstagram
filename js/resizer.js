@@ -118,13 +118,6 @@
           this._resizeConstraint.side - this._ctx.lineWidth / 2,
           this._resizeConstraint.side - this._ctx.lineWidth / 2);
 
-      //LeXX ->
-      this._ctx.font = '22px Arial bold';
-      this._ctx.fillStyle = "#ffffff";
-      this._ctx.textAlign = 'center';
-      this._ctx.fillText(this._image.naturalWidth+ ' x ' + this._image.naturalHeight, 0, (-this._resizeConstraint.side / 2)-10);
-      //<- LeXX
-
       // Восстановление состояния канваса, которое было до вызова ctx.save
       // и последующего изменения системы координат. Нужно для того, чтобы
       // следующий кадр рисовался с привычной системой координат, где точка
@@ -132,6 +125,21 @@
       // некорректно сработает даже очистка холста или нужно будет использовать
       // сложные рассчеты для координат прямоугольника, который нужно очистить.
       this._ctx.restore();
+
+      //LeXX ->
+      var topSide = Math.max(this._resizeConstraint.x, this._resizeConstraint.y);
+
+      this._ctx.strokeStyle = "rgba(0, 0, 0, 0.8)";
+      this._ctx.lineWidth = this._resizeConstraint.x*2;
+      this._ctx.setLineDash([0, 0]);
+      this._ctx.lineDashOffset = 0;
+      this._ctx.strokeRect(0-6, 0-6, this._container.width+3, this._container.height+3);
+
+      this._ctx.font = '20px Arial bold';
+      this._ctx.fillStyle = "#ffffff";
+      this._ctx.textAlign = 'center';
+      this._ctx.fillText(this._image.naturalWidth+ ' x ' + this._image.naturalHeight, this._container.width/2, this._resizeConstraint.y-10);
+      //<- LeXX
     },
 
     /**
