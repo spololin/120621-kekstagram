@@ -111,10 +111,10 @@
       this._ctx.drawImage(this._image, displX, displY);
 
       var sizeRect = {
-          rectX: (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
-          rectY: (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
-          rectW: this._resizeConstraint.side - this._ctx.lineWidth / 2,
-          rectH: this._resizeConstraint.side - this._ctx.lineWidth / 2
+        rectX: (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
+        rectY: (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
+        rectW: this._resizeConstraint.side - this._ctx.lineWidth / 2,
+        rectH: this._resizeConstraint.side - this._ctx.lineWidth / 2
       };
 
       //добавление маски
@@ -130,8 +130,8 @@
       );
 
       //добавление размера изображения
-      var textSizeImage = this._image.naturalWidth+ ' x ' + this._image.naturalHeight;
-      this.addSizeImage(textSizeImage, 0, -(this._resizeConstraint.side/2) - this._ctx.lineWidth * 2);
+      var textSizeImage = this._image.naturalWidth + ' x ' + this._image.naturalHeight;
+      this.addSizeImage(textSizeImage, 0, -(this._resizeConstraint.side / 2) - this._ctx.lineWidth * 2);
 
       // Восстановление состояния канваса, которое было до вызова ctx.save
       // и последующего изменения системы координат. Нужно для того, чтобы
@@ -172,7 +172,7 @@
 
     addSizeImage: function(text, coordinateX, coordinateY) {
       this._ctx.font = '18px Arial bold';
-      this._ctx.fillStyle = "#ffffff";
+      this._ctx.fillStyle = '#ffffff';
       this._ctx.textAlign = 'center';
       this._ctx.fillText(text, coordinateX, coordinateY);
     },
