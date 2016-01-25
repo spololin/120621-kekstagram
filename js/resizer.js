@@ -122,12 +122,7 @@
 
       // Отрисовка прямоугольника, обозначающего область изображения после
       // кадрирования. Координаты задаются от центра.
-      this._ctx.strokeRect(
-          (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
-          (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
-          this._resizeConstraint.side - this._ctx.lineWidth / 2,
-          this._resizeConstraint.side - this._ctx.lineWidth / 2
-      );
+      this._ctx.strokeRect(sizeRect.rectX, sizeRect.rectY, sizeRect.rectW, sizeRect.rectH);
 
       //добавление размера изображения
       var textSizeImage = this._image.naturalWidth + ' x ' + this._image.naturalHeight;
