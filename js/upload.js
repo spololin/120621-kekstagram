@@ -72,9 +72,13 @@
    * @return {boolean}
    */
   function resizeFormIsValid() {
+    //Принудительно делаем кнопку отправки данных недоступной
     formIsValid(false);
+    //Проверка на заполнение всех полей формы
     if ((sideValues.Top !== '') && (sideValues.Left !== '') && (sideValues.Side !== '')) {
+      //Проверка на корректность сумм введенных данных
       if (checkSumSide()) {
+        //Проверяем ширину
         var checkWidth = function() {
           if (sideValues.Left >= 0 ) {
             if ((sideValues.Left * 2 + sideValues.Side) <= currentResizer._image.naturalWidth) {
@@ -82,6 +86,7 @@
             }
           }
         };
+        //Проверяем высоту
         var checkHeight = function() {
           if (sideValues.Top >= 0) {
             if ((sideValues.Top * 2 + sideValues.Side) <= currentResizer._image.naturalHeight) {
@@ -110,9 +115,13 @@
    * @type {HTMLFormElement}
    */
   var resizeForm = document.forms['upload-resize'];
+
+  //переменные полей формы
   var valueLeft = resizeForm['resize-x'];
   var valueTop = resizeForm['resize-y'];
   var valueSide = resizeForm['resize-size'];
+
+  //Объект для хранения всех значений в числах полей формы
   var sideValues = {};
 
   /**
@@ -282,18 +291,25 @@
     filterImage.className = 'filter-image-preview ' + filterMap[selectedFilter];
   };
 
+  //Обработчик события изменения поля ввода Слева
   valueLeft.onchange = function() {
     sideValues.Left = +valueLeft.value;
     resizeFormIsValid();
   };
+
+  //Обработчик события изменения поля ввода Сверху
   valueTop.onchange = function() {
     sideValues.Top = +valueTop.value;
     resizeFormIsValid();
   };
+
+  //Обработчик события изменения поля ввода Сторона
   valueSide.onchange = function() {
     sideValues.Side = +valueSide.value;
     resizeFormIsValid();
   };
+
+  //Проверка сумм высот или широт рамки и стороны кадра с шириной или высотой исходной картинки
   function checkSumSide() {
     if ((sideValues.Left * 2 + sideValues.Side === currentResizer._image.naturalWidth) &&
        (sideValues.Top * 2 + sideValues.Side === currentResizer._image.naturalHeight)) {
@@ -302,6 +318,8 @@
       return false;
     }
   }
+
+  //Установка флага доступности кнопки отправки формы
   function formIsValid(flag) {
     resizeForm['resize-fwd'].disabled = flag;
   }
