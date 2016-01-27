@@ -295,7 +295,8 @@
     resizeFormIsValid();
   };
   function checkSumSide() {
-    if ((sideValues.Left * 2 + sideValues.Side === currentResizer._image.naturalWidth) && (sideValues.Top * 2 + sideValues.Side === currentResizer._image.naturalHeight)) {
+    if ((sideValues.Left * 2 + sideValues.Side === currentResizer._image.naturalWidth) &&
+       (sideValues.Top * 2 + sideValues.Side === currentResizer._image.naturalHeight)) {
       return true;
     } else {
       return false;
