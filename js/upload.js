@@ -72,7 +72,31 @@
    * @return {boolean}
    */
   function resizeFormIsValid() {
-    return true;
+    formIsValid(false);
+    if ((sideValues.Top !== '') && (sideValues.Left !== '') && (sideValues.Side !== '')) {
+      if (checkSumSide()) {
+        var checkWidth = function() {
+          if (sideValues.Left >= 0 ) {
+            if ((sideValues.Left * 2 + sideValues.Side) <= currentResizer._image.naturalWidth) {
+              return true;
+            }
+          }
+        };
+        var checkHeight = function() {
+          if (sideValues.Top >= 0) {
+            if ((sideValues.Top * 2 + sideValues.Side) <= currentResizer._image.naturalHeight) {
+              return true;
+            }
+          }
+        };
+        if (checkHeight() && checkWidth()) {
+          return true;
+        }
+      } else {
+        formIsValid(true);
+        return false;
+      }
+    }
   }
 
   /**
@@ -86,6 +110,10 @@
    * @type {HTMLFormElement}
    */
   var resizeForm = document.forms['upload-resize'];
+  var valueLeft = resizeForm['resize-x'];
+  var valueTop = resizeForm['resize-y'];
+  var valueSide = resizeForm['resize-size'];
+  var sideValues = {};
 
   /**
    * Форма добавления фильтра.
@@ -253,6 +281,29 @@
     // состояние или просто перезаписывать.
     filterImage.className = 'filter-image-preview ' + filterMap[selectedFilter];
   };
+
+  valueLeft.onchange = function() {
+    sideValues.Left = +valueLeft.value;
+    resizeFormIsValid();
+  };
+  valueTop.onchange = function() {
+    sideValues.Top = +valueTop.value;
+    resizeFormIsValid();
+  };
+  valueSide.onchange = function() {
+    sideValues.Side = +valueSide.value;
+    resizeFormIsValid();
+  };
+  function checkSumSide() {
+    if ((sideValues.Left * 2 + sideValues.Side === currentResizer._image.naturalWidth) && (sideValues.Top * 2 + sideValues.Side === currentResizer._image.naturalHeight)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  function formIsValid(flag) {
+    resizeForm['resize-fwd'].disabled = flag;
+  }
 
   cleanupResizer();
   updateBackground();
