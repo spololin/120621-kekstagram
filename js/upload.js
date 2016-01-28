@@ -22,7 +22,6 @@
     UPLOADING: 1,
     CUSTOM: 2
   };
-
   /**
    * Регулярное выражение, проверяющее тип загружаемого файла. Составляется
    * из ключей FileType.
@@ -45,6 +44,7 @@
    * Удаляет текущий объект {@link Resizer}, чтобы создать новый с другим
    * изображением.
    */
+
   function cleanupResizer() {
     if (currentResizer) {
       currentResizer.remove();
@@ -98,6 +98,7 @@
    */
   var filterImage = filterForm.querySelector('.filter-image-preview');
 
+  //var getCookies = docCookies.getItem('filter');
   /**
    * @type {HTMLElement}
    */
@@ -182,6 +183,9 @@
     cleanupResizer();
     updateBackground();
 
+    var getCookies = docCookies.getItem('filter');
+    setRadioButton(getCookies);
+
     resizeForm.classList.add('invisible');
     uploadForm.classList.remove('invisible');
   };
@@ -226,6 +230,7 @@
 
     filterForm.classList.add('invisible');
     uploadForm.classList.remove('invisible');
+    docCookies.setItem('filter', getRadioButton(), getDiffDate());
   };
 
   /**
@@ -253,6 +258,37 @@
     // состояние или просто перезаписывать.
     filterImage.className = 'filter-image-preview ' + filterMap[selectedFilter];
   };
+
+  //Проверяем какая радиокнопка выделена и получаем ее значение
+  function getRadioButton() {
+    var radioCollection = filterForm.getElementsByTagName('input');
+    // Перебираем коллекцию
+    for (var i = 0; i < radioCollection.length; i++) {
+      // проверяем, чтобы это был именно radio input и чтобы он был выбранный
+      if (radioCollection[i].type === 'radio' && radioCollection[i].checked) {
+        // Выводим сообщение пользователю с value выбранного элемента
+        return radioCollection[i].value;
+      }
+    }
+  }
+  //Установка радиокнопки при загрузке страницы
+  function setRadioButton(value) {
+    var radioCollection = filterForm.getElementsByTagName('input');
+    for (var i = 0; i < radioCollection.length; i++) {
+      // проверяем, чтобы это был именно radio input и чтобы он был равен аргументу
+      if (radioCollection[i].type === 'radio' && value === radioCollection[i].value) {
+        // Устанавливаем радио этому элементу
+        radioCollection[i].checked = true;
+      }
+    }
+  }
+  //Получаем кол-во дней с последнего дня рождения
+  function getDiffDate() {
+    var today = new Date();
+    var currentYear = today.getFullYear();
+    var lastBirthday = new Date(currentYear, 0, 2);
+    return Math.floor((today - lastBirthday) / 24 / 60 / 60 / 1000);
+  }
 
   cleanupResizer();
   updateBackground();
