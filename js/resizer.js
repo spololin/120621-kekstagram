@@ -122,7 +122,11 @@
 
       // Отрисовка прямоугольника, обозначающего область изображения после
       // кадрирования. Координаты задаются от центра.
-      this._ctx.strokeRect(sizeRect.rectX, sizeRect.rectY, sizeRect.rectW, sizeRect.rectH);
+      //this._ctx.strokeRect(sizeRect.rectX, sizeRect.rectY, sizeRect.rectW, sizeRect.rectH);
+
+      // Отрисовка прямоугольника из кружков, обозначающего область изображения после
+      // кадрирования. Координаты задаются от центра.
+      this.drawCircleBorder(sizeRect);
 
       //добавление размера изображения
       var textSizeImage = this._image.naturalWidth + ' x ' + this._image.naturalHeight;
@@ -170,6 +174,48 @@
       this._ctx.fillStyle = '#ffffff';
       this._ctx.textAlign = 'center';
       this._ctx.fillText(text, coordinateX, coordinateY);
+    },
+
+    drawCircleBorder: function(rect) {
+      //Ширина и высота квадрата
+      var widthLine = rect.rectW;
+      var heightLine = rect.rectH;
+      //один кружок + отступ
+      var pinLine = (this._ctx.lineWidth + 4);
+      //цвет кружков
+      this._ctx.fillStyle = '#ffe753';
+      //вершины apexN квадрата камки с координатами X, Y
+      var apex1 = { X: rect.rectX, Y: rect.rectY };
+      var apex2 = { X: rect.rectX + rect.rectW, Y: rect.rectY };
+      var apex3 = { X: rect.rectX + rect.rectW, Y: rect.rectY + rect.rectH };
+      var apex4 = { X: rect.rectX, Y: rect.rectY + rect.rectH };
+      //итератор i
+      var i = 0;
+      //рисуем поочередно все границы квадрата рамки
+      this._ctx.moveTo(apex1.X, apex1.Y);
+      for (i = 0; i < widthLine / pinLine; i++ ) {
+        this._ctx.beginPath();
+        this._ctx.arc(apex1.X + i * pinLine, apex1.Y, this._ctx.lineWidth / 2, 0, Math.PI * 2);
+        this._ctx.fill();
+      }
+      this._ctx.moveTo(apex2.X, apex2.Y);
+      for (i = 0; i < heightLine / pinLine; i++) {
+        this._ctx.beginPath();
+        this._ctx.arc(apex2.X, apex2.Y + i * pinLine, this._ctx.lineWidth / 2, 0, Math.PI * 2);
+        this._ctx.fill();
+      }
+      this._ctx.moveTo(apex3.X, apex3.Y);
+      for (i = 0; i < widthLine / pinLine; i++) {
+        this._ctx.beginPath();
+        this._ctx.arc(apex3.X - i * pinLine, apex3.Y, this._ctx.lineWidth / 2, 0, Math.PI * 2);
+        this._ctx.fill();
+      }
+      this._ctx.moveTo(apex4.X, apex4.Y);
+      for (i = 0; i < heightLine / pinLine; i++) {
+        this._ctx.beginPath();
+        this._ctx.arc(apex4.X, apex4.Y - i * pinLine, this._ctx.lineWidth / 2, 0, Math.PI * 2);
+        this._ctx.fill();
+      }
     },
 
     /**
