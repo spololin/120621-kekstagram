@@ -22,6 +22,7 @@
     UPLOADING: 1,
     CUSTOM: 2
   };
+
   /**
    * Регулярное выражение, проверяющее тип загружаемого файла. Составляется
    * из ключей FileType.
@@ -98,7 +99,6 @@
    */
   var filterImage = filterForm.querySelector('.filter-image-preview');
 
-  //var getCookies = docCookies.getItem('filter');
   /**
    * @type {HTMLElement}
    */
