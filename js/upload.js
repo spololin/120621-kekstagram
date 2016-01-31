@@ -271,6 +271,7 @@
       }
     }
   }
+
   //Установка радиокнопки при загрузке страницы
   function setRadioButton(value) {
     var radioCollection = filterForm.getElementsByTagName('input');
@@ -282,6 +283,7 @@
       }
     }
   }
+
   //Получаем кол-во дней с последнего дня рождения
   function getDiffDate() {
     var today = new Date();
