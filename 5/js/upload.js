@@ -72,30 +72,32 @@
    * @return {boolean}
    */
   function resizeFormIsValid() {
+    //Принудительно делаем кнопку отправки данных недоступной
     formIsValid(false);
+    //Проверка на заполнение всех полей формы
     if ((sideValues.Top !== '') && (sideValues.Left !== '') && (sideValues.Side !== '')) {
-      if (checkSumSide()) {
-        var checkWidth = function() {
-          if (sideValues.Left >= 0 ) {
-            if ((sideValues.Left * 2 + sideValues.Side) <= currentResizer._image.naturalWidth) {
-              return true;
-            }
+      //Проверяем ширину
+      var checkWidth = function() {
+        if (sideValues.Left >= 0 ) {
+          if ((sideValues.Left * 2 + sideValues.Side) <= currentResizer._image.naturalWidth) {
+            return true;
           }
-        };
-        var checkHeight = function() {
-          if (sideValues.Top >= 0) {
-            if ((sideValues.Top * 2 + sideValues.Side) <= currentResizer._image.naturalHeight) {
-              return true;
-            }
-          }
-        };
-        if (checkHeight() && checkWidth()) {
-          return true;
         }
-      } else {
-        formIsValid(true);
-        return false;
+      };
+      //Проверяем высоту
+      var checkHeight = function() {
+        if (sideValues.Top >= 0) {
+          if ((sideValues.Top * 2 + sideValues.Side) <= currentResizer._image.naturalHeight) {
+            return true;
+          }
+        }
+      };
+      if (checkHeight() && checkWidth()) {
+        return true;
       }
+    } else {
+      formIsValid(true);
+      return false;
     }
   }
 
@@ -110,9 +112,13 @@
    * @type {HTMLFormElement}
    */
   var resizeForm = document.forms['upload-resize'];
+
+  //переменные полей формы
   var valueLeft = resizeForm['resize-x'];
   var valueTop = resizeForm['resize-y'];
   var valueSide = resizeForm['resize-size'];
+
+  //Объект для хранения всех значений в числах полей формы
   var sideValues = {};
 
   /**
@@ -282,26 +288,25 @@
     filterImage.className = 'filter-image-preview ' + filterMap[selectedFilter];
   };
 
+  //Обработчик события изменения поля ввода Слева
   valueLeft.onchange = function() {
     sideValues.Left = +valueLeft.value;
     resizeFormIsValid();
   };
+
+  //Обработчик события изменения поля ввода Сверху
   valueTop.onchange = function() {
     sideValues.Top = +valueTop.value;
     resizeFormIsValid();
   };
+
+  //Обработчик события изменения поля ввода Сторона
   valueSide.onchange = function() {
     sideValues.Side = +valueSide.value;
     resizeFormIsValid();
   };
-  function checkSumSide() {
-    if ((sideValues.Left * 2 + sideValues.Side === currentResizer._image.naturalWidth) &&
-       (sideValues.Top * 2 + sideValues.Side === currentResizer._image.naturalHeight)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+
+  //Установка флага доступности кнопки отправки формы
   function formIsValid(flag) {
     resizeForm['resize-fwd'].disabled = flag;
   }
