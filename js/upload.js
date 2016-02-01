@@ -72,7 +72,33 @@
    * @return {boolean}
    */
   function resizeFormIsValid() {
-    return true;
+    //Принудительно делаем кнопку отправки данных недоступной
+    formIsValid(false);
+    //Проверка на заполнение всех полей формы
+    if ((sideValues.Top !== '') && (sideValues.Left !== '') && (sideValues.Side !== '')) {
+      //Проверяем ширину
+      var checkWidth = function() {
+        if (sideValues.Left >= 0 ) {
+          if ((sideValues.Left * 2 + sideValues.Side) <= currentResizer._image.naturalWidth) {
+            return true;
+          }
+        }
+      };
+      //Проверяем высоту
+      var checkHeight = function() {
+        if (sideValues.Top >= 0) {
+          if ((sideValues.Top * 2 + sideValues.Side) <= currentResizer._image.naturalHeight) {
+            return true;
+          }
+        }
+      };
+      if (checkHeight() && checkWidth()) {
+        return true;
+      }
+    } else {
+      formIsValid(true);
+      return false;
+    }
   }
 
   /**
@@ -86,6 +112,14 @@
    * @type {HTMLFormElement}
    */
   var resizeForm = document.forms['upload-resize'];
+
+  //переменные полей формы
+  var valueLeft = resizeForm['resize-x'];
+  var valueTop = resizeForm['resize-y'];
+  var valueSide = resizeForm['resize-size'];
+
+  //Объект для хранения всех значений в числах полей формы
+  var sideValues = {};
 
   /**
    * Форма добавления фильтра.
@@ -253,6 +287,29 @@
     // состояние или просто перезаписывать.
     filterImage.className = 'filter-image-preview ' + filterMap[selectedFilter];
   };
+
+  //Обработчик события изменения поля ввода Слева
+  valueLeft.onchange = function() {
+    sideValues.Left = +valueLeft.value;
+    resizeFormIsValid();
+  };
+
+  //Обработчик события изменения поля ввода Сверху
+  valueTop.onchange = function() {
+    sideValues.Top = +valueTop.value;
+    resizeFormIsValid();
+  };
+
+  //Обработчик события изменения поля ввода Сторона
+  valueSide.onchange = function() {
+    sideValues.Side = +valueSide.value;
+    resizeFormIsValid();
+  };
+
+  //Установка флага доступности кнопки отправки формы
+  function formIsValid(flag) {
+    resizeForm['resize-fwd'].disabled = flag;
+  }
 
   cleanupResizer();
   updateBackground();
