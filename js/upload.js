@@ -1,4 +1,5 @@
 /* global Resizer: true */
+/* global docCookies: true */
 
 /**
  * @fileoverview
@@ -183,9 +184,6 @@
     cleanupResizer();
     updateBackground();
 
-    var getCookies = docCookies.getItem('filter');
-    setRadioButton(getCookies);
-
     resizeForm.classList.add('invisible');
     uploadForm.classList.remove('invisible');
   };
@@ -228,10 +226,13 @@
     cleanupResizer();
     updateBackground();
 
+    docCookies.setItem('filter', getRadioButton(), getDiffDate());
+
     filterForm.classList.add('invisible');
     uploadForm.classList.remove('invisible');
-    docCookies.setItem('filter', getRadioButton(), getDiffDate());
   };
+
+  setRadioButton();
 
   /**
    * Обработчик изменения фильтра. Добавляет класс из filterMap соответствующий
@@ -273,13 +274,12 @@
   }
 
   //Установка радиокнопки при загрузке страницы
-  function setRadioButton(value) {
-    var radioCollection = filterForm.getElementsByTagName('input');
-    for (var i = 0; i < radioCollection.length; i++) {
-      // проверяем, чтобы это был именно radio input и чтобы он был равен аргументу
-      if (radioCollection[i].type === 'radio' && value === radioCollection[i].value) {
-        // Устанавливаем радио этому элементу
-        radioCollection[i].checked = true;
+  function setRadioButton() {
+    var elements = filterForm['upload-filter'];
+    for (var i = 0; i < elements.length; i++) {
+      if (elements[i].value === docCookies.getItem('filter')) {
+        elements[i].checked = true;
+        filterImage.className = 'filter-image-preview ' + 'filter-' + docCookies.getItem('filter');
       }
     }
   }
@@ -289,7 +289,9 @@
     var today = new Date();
     var currentYear = today.getFullYear();
     var lastBirthday = new Date(currentYear, 0, 2);
-    return Math.floor((today - lastBirthday) / 24 / 60 / 60 / 1000);
+    var daysPassed = Math.floor((today - lastBirthday) / 86400000);
+    var dateToExpire = today.valueOf() + daysPassed * 24 * 60 * 60 * 1000;
+    return new Date(dateToExpire).toUTCString();
   }
 
   cleanupResizer();
