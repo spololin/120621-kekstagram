@@ -76,31 +76,28 @@
     formIsValid(false);
     //Проверка на заполнение всех полей формы
     if ((sideValues.Top !== '') && (sideValues.Left !== '') && (sideValues.Side !== '')) {
-      //Проверка на корректность сумм введенных данных
-      if (checkSumSide()) {
-        //Проверяем ширину
-        var checkWidth = function() {
-          if (sideValues.Left >= 0 ) {
-            if ((sideValues.Left * 2 + sideValues.Side) <= currentResizer._image.naturalWidth) {
-              return true;
-            }
+      //Проверяем ширину
+      var checkWidth = function() {
+        if (sideValues.Left >= 0 ) {
+          if ((sideValues.Left * 2 + sideValues.Side) <= currentResizer._image.naturalWidth) {
+            return true;
           }
-        };
-        //Проверяем высоту
-        var checkHeight = function() {
-          if (sideValues.Top >= 0) {
-            if ((sideValues.Top * 2 + sideValues.Side) <= currentResizer._image.naturalHeight) {
-              return true;
-            }
-          }
-        };
-        if (checkHeight() && checkWidth()) {
-          return true;
         }
-      } else {
-        formIsValid(true);
-        return false;
+      };
+      //Проверяем высоту
+      var checkHeight = function() {
+        if (sideValues.Top >= 0) {
+          if ((sideValues.Top * 2 + sideValues.Side) <= currentResizer._image.naturalHeight) {
+            return true;
+          }
+        }
+      };
+      if (checkHeight() && checkWidth()) {
+        return true;
       }
+    } else {
+      formIsValid(true);
+      return false;
     }
   }
 
@@ -308,16 +305,6 @@
     sideValues.Side = +valueSide.value;
     resizeFormIsValid();
   };
-
-  //Проверка сумм высот или широт рамки и стороны кадра с шириной или высотой исходной картинки
-  function checkSumSide() {
-    if ((sideValues.Left * 2 + sideValues.Side === currentResizer._image.naturalWidth) &&
-       (sideValues.Top * 2 + sideValues.Side === currentResizer._image.naturalHeight)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
 
   //Установка флага доступности кнопки отправки формы
   function formIsValid(flag) {
