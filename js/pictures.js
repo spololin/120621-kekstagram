@@ -36,21 +36,14 @@
     }, IMAGE_TIMEOUT);
   }
 
-  //проверяем наличие объектов в массиве
-  if (container.children.length === 0) {
-    filters.classList.add('hidden');
-  } else {
-    filters.classList.remove('hidden');
-  }
-
-  getPictures();
-
+  //отрисовка картинок
   function renderPictures(pictures) {
     pictures.forEach(function(picture) {
       addPicture(picture);
     });
   }
 
+  //функция получения массива по ajax
   function getPictures() {
     container.classList.add('pictures-loading');
     var xhr = new XMLHttpRequest();
@@ -60,12 +53,16 @@
       var loadedPictures = JSON.parse(evt.srcElement.response);
       renderPictures(loadedPictures);
       container.classList.remove('pictures-loading');
+      filters.classList.remove('hidden');
     };
     xhr.onerror = function() {
       container.classList.remove('pictures-loading');
       container.classList.add('pictures-failure');
+      filters.classList.add('hidden');
     };
     xhr.send();
-
   }
+
+  getPictures();
+
 })();
