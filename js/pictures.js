@@ -79,7 +79,13 @@
       case 'filter-popular':
         break;
       case 'filter-new':
-        //алгоритм
+        var LAST_TWO_WEEK = 1209600000;
+        filteredPictures = filteredPictures.sort(function(a, b) {
+          var current = new Date();
+          //var temp = Date.parse(current);
+          var lastTwoWeek = Date.parse(new Date()) - lastTwoWeek;
+          return Date.parse(a.date) - Date.parse(b.date);
+        });
         break;
       case 'filter-discussed':
         filteredPictures = filteredPictures.sort(function(a, b) {
