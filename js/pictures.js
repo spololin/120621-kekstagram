@@ -52,15 +52,20 @@
   }
 
   function getPictures() {
+    container.classList.add('pictures-loading');
     var xhr = new XMLHttpRequest();
     xhr.open('GET', 'http://o0.github.io/assets/json/pictures.json', true);
     xhr.timeout = 10000;
     xhr.onload = function(evt) {
-      container.classList.add('pictures-loading');
       var loadedPictures = JSON.parse(evt.srcElement.response);
       renderPictures(loadedPictures);
+      container.classList.remove('pictures-loading');
+    };
+    xhr.onerror = function() {
+      container.classList.remove('pictures-loading');
+      container.classList.add('pictures-failure');
     };
     xhr.send();
-    container.classList.remove('pictures-loading');
+
   }
 })();
