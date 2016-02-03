@@ -4,6 +4,8 @@
   var container = document.querySelector('.pictures');
   var template = document.querySelector('#picture-template');
   var filters = document.querySelector('.filters');
+  var activeFilter = 'filter-popular';
+  var pictures = [];
 
   // функция для работы с картинками
   function addPicture(picture) {
@@ -37,8 +39,9 @@
   }
 
   //отрисовка картинок
-  function renderPictures(pictures) {
-    pictures.forEach(function(picture) {
+  function renderPictures(pics) {
+    container.innerHTML = '';
+    pics.forEach(function(picture) {
       addPicture(picture);
     });
   }
@@ -51,6 +54,7 @@
     xhr.timeout = 10000;
     xhr.onload = function(evt) {
       var loadedPictures = JSON.parse(evt.srcElement.response);
+      pictures = loadedPictures;
       renderPictures(loadedPictures);
       container.classList.remove('pictures-loading');
       filters.classList.remove('hidden');
@@ -63,6 +67,38 @@
     xhr.send();
   }
 
+  //функция установки активного фильтра и отрисовки картинок по фильтру
+  function setActiveFilter(id) {
+    if (activeFilter === id) {
+      return;
+    }
+
+    var filteredPictures = pictures.slice(0);
+
+    switch (id) {
+      case 'filter-popular':
+        break;
+      case 'filter-new':
+        //алгоритм
+        break;
+      case 'filter-discussed':
+        filteredPictures = filteredPictures.sort(function(a, b) {
+          return b.comments - a.comments;
+        });
+        break;
+    }
+
+    renderPictures(filteredPictures);
+    activeFilter = id;
+  }
+
   getPictures();
+
+  for (var i = 0; i <= filters.length; i++) {
+    filters[i].onclick = function(evt) {
+      var clickedElementID = evt.target.id;
+      setActiveFilter(clickedElementID);
+    };
+  }
 
 })();
