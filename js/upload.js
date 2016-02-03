@@ -1,4 +1,5 @@
 /* global Resizer: true */
+/* global docCookies: true */
 
 /**
  * @fileoverview
@@ -45,6 +46,7 @@
    * Удаляет текущий объект {@link Resizer}, чтобы создать новый с другим
    * изображением.
    */
+
   function cleanupResizer() {
     if (currentResizer) {
       currentResizer.remove();
@@ -258,9 +260,13 @@
     cleanupResizer();
     updateBackground();
 
+    docCookies.setItem('filter', getRadioButton(), getDiffDate());
+
     filterForm.classList.add('invisible');
     uploadForm.classList.remove('invisible');
   };
+
+  setRadioButton();
 
   /**
    * Обработчик изменения фильтра. Добавляет класс из filterMap соответствующий
@@ -309,6 +315,40 @@
   //Установка флага доступности кнопки отправки формы
   function formIsValid(flag) {
     resizeForm['resize-fwd'].disabled = flag;
+  }
+
+  //Проверяем какая радиокнопка выделена и получаем ее значение
+  function getRadioButton() {
+    var radioCollection = filterForm.getElementsByTagName('input');
+    // Перебираем коллекцию
+    for (var i = 0; i < radioCollection.length; i++) {
+      // проверяем, чтобы это был именно radio input и чтобы он был выбранный
+      if (radioCollection[i].type === 'radio' && radioCollection[i].checked) {
+        // Выводим сообщение пользователю с value выбранного элемента
+        return radioCollection[i].value;
+      }
+    }
+  }
+
+  //Установка радиокнопки при загрузке страницы
+  function setRadioButton() {
+    var elements = filterForm['upload-filter'];
+    for (var i = 0; i < elements.length; i++) {
+      if (elements[i].value === docCookies.getItem('filter')) {
+        elements[i].checked = true;
+        filterImage.className = 'filter-image-preview ' + 'filter-' + docCookies.getItem('filter');
+      }
+    }
+  }
+
+  //Получаем кол-во дней с последнего дня рождения
+  function getDiffDate() {
+    var today = new Date();
+    var currentYear = today.getFullYear();
+    var lastBirthday = new Date(currentYear, 0, 2);
+    var daysPassed = Math.floor((today - lastBirthday) / 86400000);
+    var dateToExpire = today.valueOf() + daysPassed * 24 * 60 * 60 * 1000;
+    return new Date(dateToExpire).toUTCString();
   }
 
   cleanupResizer();
