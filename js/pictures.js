@@ -5,12 +5,6 @@
   var template = document.querySelector('#picture-template');
   var filters = document.querySelector('.filters');
 
-  /* global pictures */
-  // перебираем объекты из массива
-  pictures.forEach(function(picture) {
-    addPicture(picture);
-  });
-
   // функция для работы с картинками
   function addPicture(picture) {
     var element = template.content.children[0].cloneNode(true);
@@ -49,11 +43,24 @@
     filters.classList.remove('hidden');
   }
 
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'http://o0.github.io/assets/json/pictures.json', true);
-  xhr.timeout = 10000;
-  xhr.onload = function(evt) {
-    console.log(JSON.parse(evt.srcElement.response));
-  };
-  xhr.send();
+  getPictures();
+
+  function renderPictures(pictures) {
+    pictures.forEach(function(picture) {
+      addPicture(picture);
+    });
+  }
+
+  function getPictures() {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'http://o0.github.io/assets/json/pictures.json', true);
+    xhr.timeout = 10000;
+    xhr.onload = function(evt) {
+      container.classList.add('pictures-loading');
+      var loadedPictures = JSON.parse(evt.srcElement.response);
+      renderPictures(loadedPictures);
+    };
+    xhr.send();
+    container.classList.remove('pictures-loading');
+  }
 })();
