@@ -81,7 +81,7 @@
       case 'filter-new':
         var selectedArray = getArrayPicturesLastTwoWeeks(filteredPictures);
         filteredPictures = selectedArray.sort(function(a, b) {
-          return Date.parse(a.date) - Date.parse(b.date);
+          return Date.parse(b.date) - Date.parse(a.date);
         });
         break;
       case 'filter-discussed':
@@ -99,9 +99,10 @@
   function getArrayPicturesLastTwoWeeks(filteredPictures) {
     var LAST_TWO_WEEK = 1209600000;
     var selectedArray = [];
-    var lastTwoWeek = Date.parse(new Date()) - LAST_TWO_WEEK;
+    var lastTwoWeek = Date.parse(new Date()) - LAST_TWO_WEEK - 86400000;
     for (var i = 0; i < filteredPictures.length; i++) {
-      if (Date.parse(filteredPictures[i].date) >= lastTwoWeek) {
+      var datePictureParse = Date.parse(filteredPictures[i].date);
+      if (datePictureParse >= lastTwoWeek && datePictureParse <= Date.parse(new Date())) {
         selectedArray.push(filteredPictures[i]);
       }
     }
