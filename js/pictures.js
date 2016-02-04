@@ -79,11 +79,8 @@
       case 'filter-popular':
         break;
       case 'filter-new':
-        var LAST_TWO_WEEK = 1209600000;
-        filteredPictures = filteredPictures.sort(function(a, b) {
-          var current = new Date();
-          //var temp = Date.parse(current);
-          var lastTwoWeek = Date.parse(new Date()) - lastTwoWeek;
+        var selectedArray = getArrayPicturesLastTwoWeeks(filteredPictures);
+        filteredPictures = selectedArray.sort(function(a, b) {
           return Date.parse(a.date) - Date.parse(b.date);
         });
         break;
@@ -96,6 +93,19 @@
 
     renderPictures(filteredPictures);
     activeFilter = id;
+  }
+
+  //получаем массив объектов за последние 2 недели от текущего дня
+  function getArrayPicturesLastTwoWeeks(filteredPictures) {
+    var LAST_TWO_WEEK = 1209600000;
+    var selectedArray = [];
+    var lastTwoWeek = Date.parse(new Date()) - LAST_TWO_WEEK;
+    for (var i = 0; i < filteredPictures.length; i++) {
+      if (Date.parse(filteredPictures[i].date) >= lastTwoWeek) {
+        selectedArray.push(filteredPictures[i]);
+      }
+    }
+    return selectedArray;
   }
 
   getPictures();
