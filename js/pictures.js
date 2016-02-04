@@ -12,7 +12,6 @@
     var element = template.content.children[0].cloneNode(true);
     element.querySelector('.picture-likes').textContent = picture.likes;
     element.querySelector('.picture-comments').textContent = picture.comments;
-    container.appendChild(element);
 
     // добавляем картинки
     var imgTag = element.querySelector('img');
@@ -36,14 +35,19 @@
       image.src = '';
       element.classList.add('picture-load-failure');
     }, IMAGE_TIMEOUT);
+
+    return element;
   }
 
   //отрисовка картинок
   function renderPictures(pics) {
     container.innerHTML = '';
+    var fragment = document.createDocumentFragment();
     pics.forEach(function(picture) {
-      addPicture(picture);
+      var element = addPicture(picture);
+      fragment.appendChild(element);
     });
+    container.appendChild(fragment);
   }
 
   //функция получения массива по ajax
