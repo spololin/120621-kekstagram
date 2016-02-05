@@ -83,15 +83,20 @@
       case 'filter-popular':
         break;
       case 'filter-new':
+        /*
+        @var LAST_TWO_WEEK = 14 * 24 * 60 *60 * 1000 - 2 недели
+        @var ONE_DAY = 1 * 24 * 60 * 60 * 1000 - 1 день
+         */
         var LAST_TWO_WEEK = 1209600000;
-        var lastTwoWeek = Date.parse(new Date()) - LAST_TWO_WEEK - 86400000;
+        var ONE_DAY = 86400000;
+        var lastTwoWeek = new Date() - LAST_TWO_WEEK - ONE_DAY;
         filteredPictures = filteredPictures.filter(
           function(value) {
             var datePictureParse = Date.parse(value.date);
-            return (datePictureParse >= lastTwoWeek && datePictureParse <= Date.parse(new Date()));
+            return (datePictureParse >= lastTwoWeek && datePictureParse <= new Date());
           }
         ).sort(function(a, b) {
-          return Date.parse(b.date) - Date.parse(a.date);
+          return b.date - a.date;
         });
         break;
       case 'filter-discussed':
