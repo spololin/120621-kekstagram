@@ -87,9 +87,9 @@
         @var LAST_TWO_WEEK = 14 * 24 * 60 *60 * 1000 - 2 недели
         @var ONE_DAY = 1 * 24 * 60 * 60 * 1000 - 1 день
          */
-        var LAST_TWO_WEEK = 1209600000;
+        var TWO_WEEK = 1209600000;
         var ONE_DAY = 86400000;
-        var lastTwoWeek = new Date() - LAST_TWO_WEEK - ONE_DAY;
+        var lastTwoWeek = new Date() - TWO_WEEK - ONE_DAY;
         filteredPictures = filteredPictures.filter(
           function(value) {
             var datePictureParse = Date.parse(value.date);
