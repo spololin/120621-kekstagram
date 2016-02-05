@@ -83,15 +83,14 @@
       case 'filter-popular':
         break;
       case 'filter-new':
-        var selectedArray = filteredPictures.filter(
+        var LAST_TWO_WEEK = 1209600000;
+        var lastTwoWeek = Date.parse(new Date()) - LAST_TWO_WEEK - 86400000;
+        filteredPictures = filteredPictures.filter(
           function(value) {
-            var LAST_TWO_WEEK = 1209600000;
-            var lastTwoWeek = Date.parse(new Date()) - LAST_TWO_WEEK - 86400000;
             var datePictureParse = Date.parse(value.date);
             return (datePictureParse >= lastTwoWeek && datePictureParse <= Date.parse(new Date()));
           }
-        );
-        filteredPictures = selectedArray.sort(function(a, b) {
+        ).sort(function(a, b) {
           return Date.parse(b.date) - Date.parse(a.date);
         });
         break;
