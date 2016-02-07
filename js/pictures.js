@@ -6,6 +6,23 @@
   var filters = document.querySelector('.filters');
   var activeFilter = 'filter-popular';
   var pictures = [];
+  var filteredPictures = [];
+  var currentPage = 0;
+  var PAGE_SIZE = 12;
+
+  //обработчик скролла
+  window.addEventListener('scroll', function() {
+    clearTimeout(scrollTimeout);
+    var scrollTimeout = setTimeout(function() {
+      var picturesCoordinates = container.getBoundingClientRect();
+      var viewportSize = window.innerHeight;
+      if (picturesCoordinates.bottom <= viewportSize) {
+        if (currentPage < Math.ceil(filteredPictures.length / PAGE_SIZE)) {
+          renderPictures(++currentPage);
+        }
+      }
+    }, 100);
+  });
 
   // функция для работы с картинками
   function addPicture(picture) {
@@ -40,10 +57,15 @@
   }
 
   //отрисовка картинок
-  function renderPictures(pics) {
-    container.innerHTML = '';
+  function renderPictures(pageNumber, replace) {
+    if (replace) {
+      container.innerHTML = '';
+    }
     var fragment = document.createDocumentFragment();
-    pics.forEach(function(picture) {
+    var from = pageNumber * PAGE_SIZE;
+    var to = from + PAGE_SIZE;
+    var pagePictures = filteredPictures.slice(from, to);
+    pagePictures.forEach(function(picture) {
       var element = addPicture(picture);
       fragment.appendChild(element);
     });
@@ -59,7 +81,8 @@
     xhr.onload = function(evt) {
       var loadedPictures = JSON.parse(evt.srcElement.response);
       pictures = loadedPictures;
-      renderPictures(loadedPictures);
+      renderPictures(0);
+      setActiveFilter(activeFilter, true);
       container.classList.remove('pictures-loading');
       filters.classList.remove('hidden');
     };
@@ -72,12 +95,12 @@
   }
 
   //функция установки активного фильтра и отрисовки картинок по фильтру
-  function setActiveFilter(id) {
-    if (activeFilter === id) {
+  function setActiveFilter(id, force) {
+    if (activeFilter === id && !force) {
       return;
     }
 
-    var filteredPictures = pictures.slice(0);
+    filteredPictures = pictures.slice(0);
 
     switch (id) {
       case 'filter-popular':
@@ -106,17 +129,24 @@
         break;
     }
 
-    renderPictures(filteredPictures);
+    renderPictures(0, true);
+
+    //провекра вывода фото, если есть свободное место
+    if (container.getBoundingClientRect().bottom <= window.innerHeight) {
+      renderPictures(currentPage++);
+    }
+
     activeFilter = id;
   }
 
-  getPictures();
+  //делегирование клика по фильтрам
+  filters.addEventListener('click', function(evt) {
+    var clickedElement = evt.target;
+    if (clickedElement.classList.contains('filters-radio')) {
+      setActiveFilter(clickedElement.id);
+    }
+  });
 
-  for (var i = 0; i < filters.length; i++) {
-    filters[i].onclick = function(evt) {
-      var clickedElementID = evt.target.id;
-      setActiveFilter(clickedElementID);
-    };
-  }
+  getPictures();
 
 })();
