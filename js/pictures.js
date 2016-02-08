@@ -76,11 +76,10 @@
   function getPictures() {
     container.classList.add('pictures-loading');
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'http://o0.github.io/assets/json/pictures.json', true);
+    xhr.open('GET', '//o0.github.io/assets/json/pictures.json', true);
     xhr.timeout = 10000;
     xhr.onload = function(evt) {
-      var loadedPictures = JSON.parse(evt.srcElement.response);
-      pictures = loadedPictures;
+      pictures = JSON.parse(evt.srcElement.response);
       renderPictures(0);
       setActiveFilter(activeFilter, true);
       container.classList.remove('pictures-loading');
