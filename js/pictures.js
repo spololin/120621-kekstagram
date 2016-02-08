@@ -11,9 +11,10 @@
   var PAGE_SIZE = 12;
 
   //обработчик скролла
+  var scrollTimeout;
   window.addEventListener('scroll', function() {
     clearTimeout(scrollTimeout);
-    var scrollTimeout = setTimeout(function() {
+    scrollTimeout = setTimeout(function() {
       var picturesCoordinates = container.getBoundingClientRect();
       var viewportSize = window.innerHeight;
       if (picturesCoordinates.bottom <= viewportSize) {
