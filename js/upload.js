@@ -197,8 +197,6 @@
 
           hideMessage();
           setTimeout(getOffset, 1);
-          //setTempArr(sideValues.left, sideValues.top, sideValues.side);
-          //alert(valueLeft.value);
         };
 
         fileReader.readAsDataURL(element.files[0]);
