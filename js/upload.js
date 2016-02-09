@@ -196,6 +196,9 @@
           resizeForm.classList.remove('invisible');
 
           hideMessage();
+          setTimeout(getOffset, 1);
+          //setTempArr(sideValues.left, sideValues.top, sideValues.side);
+          //alert(valueLeft.value);
         };
 
         fileReader.readAsDataURL(element.files[0]);
@@ -236,6 +239,10 @@
       resizeForm.classList.add('invisible');
       filterForm.classList.remove('invisible');
     }
+  });
+
+  resizeForm.addEventListener('change', function() {
+    currentResizer.setConstraint(Math.ceil(valueLeft.value), Math.ceil(valueTop.value), Math.floor(valueSide.value));
   });
 
   /**
@@ -296,19 +303,19 @@
 
   //Обработчик события изменения поля ввода Слева
   valueLeft.addEventListener('change', function() {
-    sideValues.Left = +valueLeft.value;
+    sideValues.left = +valueLeft.value;
     resizeFormIsValid();
   });
 
   //Обработчик события изменения поля ввода Сверху
   valueTop.addEventListener('change', function() {
-    sideValues.Top = +valueTop.value;
+    sideValues.top = +valueTop.value;
     resizeFormIsValid();
   });
 
   //Обработчик события изменения поля ввода Сторона
   valueSide.addEventListener('change', function() {
-    sideValues.Side = +valueSide.value;
+    sideValues.side = +valueSide.value;
     resizeFormIsValid();
   });
 
@@ -350,6 +357,17 @@
     var dateToExpire = today.valueOf() + daysPassed * 24 * 60 * 60 * 1000;
     return new Date(dateToExpire).toUTCString();
   }
+
+  //Получение значений смещений и размера кадра в поля формы.
+  function getOffset() {
+    var offset = currentResizer.getConstraint();
+    valueLeft.value = Math.ceil(offset.x);
+    valueTop.value = Math.ceil(offset.y);
+    valueSide.value = Math.floor(offset.side);
+  }
+
+  //Установка значений смещения на форму
+  window.addEventListener('resizerchange', getOffset);
 
   cleanupResizer();
   updateBackground();
