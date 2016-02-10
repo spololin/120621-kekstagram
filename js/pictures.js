@@ -15,15 +15,15 @@
   window.addEventListener('scroll', function() {
     clearTimeout(scrollTimeout);
     scrollTimeout = setTimeout(function() {
-      var picturesCoordinates = container.getBoundingClientRect();
-      var viewportSize = window.innerHeight;
-      if (picturesCoordinates.bottom <= viewportSize) {
-        if (currentPage < Math.ceil(filteredPictures.length / PAGE_SIZE)) {
-          renderPictures(++currentPage);
-        }
+      if (loadedNextPage()) {
+        renderPictures(++currentPage);
       }
     }, 100);
   });
+
+  function loadedNextPage() {
+    return ((container.getBoundingClientRect().bottom - 182 <= window.innerHeight) && (currentPage < Math.ceil(filteredPictures.length / PAGE_SIZE)));
+  }
 
   // функция для работы с картинками
   function addPicture(picture) {
@@ -72,6 +72,10 @@
       fragment.appendChild(element);
     });
     container.appendChild(fragment);
+
+    while (loadedNextPage()) {
+      renderPictures(++currentPage);
+    }
   }
 
   //функция получения массива по ajax
