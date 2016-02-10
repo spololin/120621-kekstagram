@@ -60,6 +60,7 @@
   //отрисовка картинок
   function renderPictures(pageNumber, replace) {
     if (replace) {
+      currentPage = 0;
       container.innerHTML = '';
     }
     var fragment = document.createDocumentFragment();
@@ -81,7 +82,6 @@
     xhr.timeout = 10000;
     xhr.onload = function(evt) {
       pictures = JSON.parse(evt.srcElement.response);
-      renderPictures(0);
       setActiveFilter(activeFilter, true);
       container.classList.remove('pictures-loading');
       filters.classList.remove('hidden');
@@ -133,7 +133,7 @@
 
     //провекра вывода фото, если есть свободное место
     if (container.getBoundingClientRect().bottom <= window.innerHeight) {
-      renderPictures(currentPage++);
+      renderPictures(++currentPage);
     }
 
     activeFilter = id;
