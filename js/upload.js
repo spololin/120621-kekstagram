@@ -240,8 +240,28 @@
   });
 
   resizeForm.addEventListener('change', function() {
-    currentResizer.setConstraint(Math.floor(valueLeft.value), Math.floor(valueTop.value), Math.floor(valueSide.value));
+    //diffValueSide - разница между предыдущим значением стороны кадра и новым значением
+    var diffValueSide = valueSide.value - currentTemp.side;
+    //измененные значения
+    var changeLeft = valueLeft.value - diffValueSide / 2;
+    var changeTop = valueTop.value - diffValueSide / 2;
+    var changeSide = valueSide.value;
+    if (diffValueSide > 0) {
+      currentResizer.setConstraint(Math.floor(changeLeft), Math.floor(changeTop), Math.floor(changeSide));
+      setCurrentValues(Math.floor(changeLeft), Math.floor(changeTop), Math.floor(changeSide));
+    } else {
+      currentResizer.setConstraint(Math.ceil(changeLeft), Math.ceil(changeTop), Math.ceil(changeSide));
+      setCurrentValues(Math.ceil(changeLeft), Math.ceil(changeTop), Math.ceil(changeSide));
+    }
   });
+
+  //объект для хранения новых значений кадра и координат
+  var currentTemp = {};
+  function setCurrentValues(left, top, side) {
+    currentTemp.left = left;
+    currentTemp.top = top;
+    currentTemp.side = side;
+  }
 
   /**
    * Сброс формы фильтра. Показывает форму кадрирования.
@@ -362,6 +382,8 @@
     valueLeft.value = Math.floor(offset.x);
     valueTop.value = Math.floor(offset.y);
     valueSide.value = Math.floor(offset.side);
+    //запоминаем изначальное состояние стороны кадрирования
+    currentTemp.side = valueSide.value;
   }
 
   //Установка значений смещения на форму
