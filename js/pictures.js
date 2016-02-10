@@ -21,6 +21,7 @@
     }, 100);
   });
 
+  // проверка необходимости загрузки новой страницы
   function loadedNextPage() {
     return ((container.getBoundingClientRect().bottom - 182 <= window.innerHeight) && (currentPage < Math.ceil(filteredPictures.length / PAGE_SIZE)));
   }
@@ -82,7 +83,7 @@
   function getPictures() {
     container.classList.add('pictures-loading');
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', '//o0.github.io/assets/json/pictures.json', true);
+    xhr.open('GET', 'pictures.json', true);
     xhr.timeout = 10000;
     xhr.onload = function(evt) {
       pictures = JSON.parse(evt.srcElement.response);
@@ -135,15 +136,10 @@
 
     renderPictures(0, true);
 
-    //провекра вывода фото, если есть свободное место
-    if (container.getBoundingClientRect().bottom <= window.innerHeight) {
-      renderPictures(++currentPage);
-    }
-
     activeFilter = id;
   }
 
-  //делегирование клика по фильтрам
+  //обработчик клика по фильтрам
   filters.addEventListener('click', function(evt) {
     var clickedElement = evt.target;
     if (clickedElement.classList.contains('filters-radio')) {
