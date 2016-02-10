@@ -81,7 +81,7 @@
       //Проверяем ширину
       var checkWidth = function() {
         if (sideValues.Left >= 0 ) {
-          if ((sideValues.Left * 2 + sideValues.Side) <= currentResizer._image.naturalWidth) {
+          if ((sideValues.Left + sideValues.Side) <= currentResizer._image.naturalWidth) {
             return true;
           }
         }
@@ -89,7 +89,7 @@
       //Проверяем высоту
       var checkHeight = function() {
         if (sideValues.Top >= 0) {
-          if ((sideValues.Top * 2 + sideValues.Side) <= currentResizer._image.naturalHeight) {
+          if ((sideValues.Top + sideValues.Side) <= currentResizer._image.naturalHeight) {
             return true;
           }
         }
@@ -240,7 +240,7 @@
   });
 
   resizeForm.addEventListener('change', function() {
-    currentResizer.setConstraint(Math.ceil(valueLeft.value), Math.ceil(valueTop.value), Math.floor(valueSide.value));
+    currentResizer.setConstraint(Math.floor(valueLeft.value), Math.floor(valueTop.value), Math.floor(valueSide.value));
   });
 
   /**
@@ -359,8 +359,8 @@
   //Получение значений смещений и размера кадра в поля формы.
   function getOffset() {
     var offset = currentResizer.getConstraint();
-    valueLeft.value = Math.ceil(offset.x);
-    valueTop.value = Math.ceil(offset.y);
+    valueLeft.value = Math.floor(offset.x);
+    valueTop.value = Math.floor(offset.y);
     valueSide.value = Math.floor(offset.side);
   }
 
