@@ -242,26 +242,27 @@
   resizeForm.addEventListener('change', function() {
     //diffValueSide - разница между предыдущим значением стороны кадра и новым значением
     var diffValueSide = valueSide.value - currentTemp.side;
-    //измененные значения
-    var changeLeft = valueLeft.value - diffValueSide / 2;
-    var changeTop = valueTop.value - diffValueSide / 2;
-    var changeSide = valueSide.value;
-    if (diffValueSide > 0) {
-      currentResizer.setConstraint(Math.floor(changeLeft), Math.floor(changeTop), Math.floor(changeSide));
-      setCurrentValues(Math.floor(changeLeft), Math.floor(changeTop), Math.floor(changeSide));
-    } else {
-      currentResizer.setConstraint(Math.ceil(changeLeft), Math.ceil(changeTop), Math.ceil(changeSide));
-      setCurrentValues(Math.ceil(changeLeft), Math.ceil(changeTop), Math.ceil(changeSide));
-    }
+    ////измененные значения
+    //var changeLeft = valueLeft.value - diffValueSide / 2;
+    //var changeTop = valueTop.value - diffValueSide / 2;
+    //var changeSide = valueSide.value;
+    //if (diffValueSide > 0) {
+    //  currentResizer.setConstraint(Math.floor(changeLeft), Math.floor(changeTop), Math.floor(changeSide));
+    //  setCurrentValues(Math.floor(changeLeft), Math.floor(changeTop), Math.floor(changeSide));
+    //} else {
+    //  currentResizer.setConstraint(Math.ceil(changeLeft), Math.ceil(changeTop), Math.ceil(changeSide));
+    //  setCurrentValues(Math.ceil(changeLeft), Math.ceil(changeTop), Math.ceil(changeSide));
+    //}
+    currentResizer.setConstraint(+valueLeft.value - diffValueSide, +valueTop.value - diffValueSide, +valueSide.value);
   });
 
   //объект для хранения новых значений кадра и координат
   var currentTemp = {};
-  function setCurrentValues(left, top, side) {
-    currentTemp.left = left;
-    currentTemp.top = top;
-    currentTemp.side = side;
-  }
+  //function setCurrentValues(left, top, side) {
+  //  currentTemp.left = left;
+  //  currentTemp.top = top;
+  //  currentTemp.side = side;
+  //}
 
   /**
    * Сброс формы фильтра. Показывает форму кадрирования.
