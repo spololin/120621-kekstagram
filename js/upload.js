@@ -1,5 +1,5 @@
 /* global Resizer: true */
-/* global docCookies: true */
+/* global docCookies: true, Resizer : true */
 
 /**
  * @fileoverview
@@ -74,22 +74,21 @@
    * @return {boolean}
    */
   function resizeFormIsValid() {
-    //Принудительно делаем кнопку отправки данных недоступной
-    formIsValid(false);
-    //Проверка на заполнение всех полей формы
-    if ((sideValues.Top !== '') && (sideValues.Left !== '') && (sideValues.Side !== '')) {
-      //Проверяем ширину
+    var valueLeft = +resizeForm['resize-x'].value;
+    var valueTop = +resizeForm['resize-y'].value;
+    var valueSize = +resizeForm['resize-size'].value;
+
+    if ((valueTop !== '') && (valueLeft !== '') && (valueSize !== '')) {
       var checkWidth = function() {
-        if (sideValues.Left >= 0 ) {
-          if ((sideValues.Left + sideValues.Side) <= currentResizer._image.naturalWidth) {
+        if (valueLeft >= 0 ) {
+          if ((valueLeft + valueSize) <= currentResizer._image.naturalWidth) {
             return true;
           }
         }
       };
-      //Проверяем высоту
       var checkHeight = function() {
-        if (sideValues.Top >= 0) {
-          if ((sideValues.Top + sideValues.Side) <= currentResizer._image.naturalHeight) {
+        if (valueTop >= 0) {
+          if ((valueTop + valueSize) <= currentResizer._image.naturalHeight) {
             return true;
           }
         }
@@ -98,7 +97,6 @@
         return true;
       }
     } else {
-      formIsValid(true);
       return false;
     }
   }
@@ -114,14 +112,9 @@
    * @type {HTMLFormElement}
    */
   var resizeForm = document.forms['upload-resize'];
-
-  //переменные полей формы
-  var valueLeft = resizeForm['resize-x'];
-  var valueTop = resizeForm['resize-y'];
-  var valueSide = resizeForm['resize-size'];
-
-  //Объект для хранения всех значений в числах полей формы
-  var sideValues = {};
+  var uploadResizeControls = resizeForm.querySelector('.upload-resize-controls');
+  var errorResize = uploadResizeControls.querySelector('.input-error');
+  var buttonSubmit = resizeForm.elements['resize-fwd'];
 
   /**
    * Форма добавления фильтра.
@@ -196,7 +189,7 @@
           resizeForm.classList.remove('invisible');
 
           hideMessage();
-          setTimeout(getOffset, 1);
+          setTimeout(updateConstraint, 1);
         };
 
         fileReader.readAsDataURL(element.files[0]);
@@ -239,30 +232,35 @@
     }
   });
 
+  //Обработчик изменения формы с данными и установка новых значений для кадра
   resizeForm.addEventListener('change', function() {
-    //diffValueSide - разница между предыдущим значением стороны кадра и новым значением
-    var diffValueSide = valueSide.value - currentTemp.side;
-    ////измененные значения
-    //var changeLeft = valueLeft.value - diffValueSide / 2;
-    //var changeTop = valueTop.value - diffValueSide / 2;
-    //var changeSide = valueSide.value;
-    //if (diffValueSide > 0) {
-    //  currentResizer.setConstraint(Math.floor(changeLeft), Math.floor(changeTop), Math.floor(changeSide));
-    //  setCurrentValues(Math.floor(changeLeft), Math.floor(changeTop), Math.floor(changeSide));
-    //} else {
-    //  currentResizer.setConstraint(Math.ceil(changeLeft), Math.ceil(changeTop), Math.ceil(changeSide));
-    //  setCurrentValues(Math.ceil(changeLeft), Math.ceil(changeTop), Math.ceil(changeSide));
-    //}
-    currentResizer.setConstraint(+valueLeft.value - diffValueSide, +valueTop.value - diffValueSide, +valueSide.value);
+    validateForm(resizeFormIsValid());
+    currentResizer.setConstraint(+resizeForm.elements['resize-x'].value, +resizeForm.elements['resize-y'].value, +resizeForm.elements['resize-size'].value);
   });
 
-  //объект для хранения новых значений кадра и координат
-  var currentTemp = {};
-  //function setCurrentValues(left, top, side) {
-  //  currentTemp.left = left;
-  //  currentTemp.top = top;
-  //  currentTemp.side = side;
-  //}
+  //Установка ограничений на отправку данных и отображение предупреждения
+  function validateForm(valid) {
+    if (valid) {
+      buttonSubmit.style.display = 'block';
+      if (errorResize) {
+        uploadResizeControls.removeChild(errorResize);
+        errorResize = '';
+      }
+    } else {
+      buttonSubmit.style.display = 'none';
+      if (!errorResize) {
+        errorResize = document.createElement('div');
+        errorResize.className = 'input-error';
+        errorResize.style.position = 'absolute';
+        errorResize.style.bottom = '-50%';
+        errorResize.style.left = '50%';
+        errorResize.style.marginLeft = '-25%';
+        errorResize.style.color = 'red';
+        errorResize.innerHTML = 'Проверьте введенные данные';
+        uploadResizeControls.appendChild(errorResize);
+      }
+    }
+  }
 
   /**
    * Сброс формы фильтра. Показывает форму кадрирования.
@@ -292,8 +290,6 @@
     uploadForm.classList.remove('invisible');
   });
 
-  setRadioButton();
-
   /**
    * Обработчик изменения фильтра. Добавляет класс из filterMap соответствующий
    * выбранному значению в форме.
@@ -320,37 +316,11 @@
     filterImage.className = 'filter-image-preview ' + filterMap[selectedFilter];
   });
 
-  //Обработчик события изменения поля ввода Слева
-  valueLeft.addEventListener('change', function() {
-    sideValues.left = +valueLeft.value;
-    resizeFormIsValid();
-  });
-
-  //Обработчик события изменения поля ввода Сверху
-  valueTop.addEventListener('change', function() {
-    sideValues.top = +valueTop.value;
-    resizeFormIsValid();
-  });
-
-  //Обработчик события изменения поля ввода Сторона
-  valueSide.addEventListener('change', function() {
-    sideValues.side = +valueSide.value;
-    resizeFormIsValid();
-  });
-
-  //Установка флага доступности кнопки отправки формы
-  function formIsValid(flag) {
-    resizeForm['resize-fwd'].disabled = flag;
-  }
-
   //Проверяем какая радиокнопка выделена и получаем ее значение
   function getRadioButton() {
     var radioCollection = filterForm.getElementsByTagName('input');
-    // Перебираем коллекцию
     for (var i = 0; i < radioCollection.length; i++) {
-      // проверяем, чтобы это был именно radio input и чтобы он был выбранный
       if (radioCollection[i].type === 'radio' && radioCollection[i].checked) {
-        // Выводим сообщение пользователю с value выбранного элемента
         return radioCollection[i].value;
       }
     }
@@ -378,18 +348,18 @@
   }
 
   //Получение значений смещений и размера кадра в поля формы.
-  function getOffset() {
-    var offset = currentResizer.getConstraint();
-    valueLeft.value = Math.floor(offset.x);
-    valueTop.value = Math.floor(offset.y);
-    valueSide.value = Math.floor(offset.side);
-    //запоминаем изначальное состояние стороны кадрирования
-    currentTemp.side = valueSide.value;
+  function updateConstraint() {
+    var constraint = currentResizer.getConstraint();
+    resizeForm['resize-x'].value = Math.floor(constraint.x);
+    resizeForm['resize-y'].value = Math.floor(constraint.y);
+    resizeForm['resize-size'].value = Math.floor(constraint.side);
+    validateForm(resizeFormIsValid());
   }
 
   //Установка значений смещения на форму
-  window.addEventListener('resizerchange', getOffset);
+  window.addEventListener('resizerchange', updateConstraint);
 
+  setRadioButton();
   cleanupResizer();
   updateBackground();
 })();
