@@ -28,7 +28,12 @@
 
   // функция для работы с картинками
   function addPicture(picture) {
-    var element = template.content.children[0].cloneNode(true);
+    var element;
+    if ('content' in template) {
+      element = template.content.childNodes[1].cloneNode(true);
+    } else {
+      element = template.childNodes[1].cloneNode(true);
+    }
     element.querySelector('.picture-likes').textContent = picture.likes;
     element.querySelector('.picture-comments').textContent = picture.comments;
     var imgTag = element.querySelector('img');
