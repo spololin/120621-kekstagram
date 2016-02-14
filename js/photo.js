@@ -2,12 +2,11 @@
 
 (function() {
   function Photo(data) {
-    this._data = data;
+    this.data = data;
   }
 
   Photo.prototype.render = function() {
     var template = document.querySelector('#picture-template');
-    var element;
 
     if ('content' in template) {
       this.element = template.content.childNodes[1].cloneNode(true);
@@ -15,23 +14,24 @@
       this.element = template.childNodes[1].cloneNode(true);
     }
 
-    this.element.querySelector('.picture-likes').textContent = this._data.likes;
-    this.element.querySelector('.picture-comments').textContent = this._data.comments;
+    this.element.querySelector('.picture-likes').textContent = this.data.likes;
+    this.element.querySelector('.picture-comments').textContent = this.data.comments;
+    this.element.querySelector('.picture-comments').textContent = this.data.comments;
 
-    var imgTag = element.querySelector('img');
+    var imgTag = this.element.querySelector('img');
     var image = new Image(182, 182);
     var imageLoadTimeout;
 
     image.addEventListener('load', function() {
       clearTimeout(imageLoadTimeout);
       this.element.replaceChild(image, imgTag);
-    }).bind(this);
+    }.bind(this));
 
     image.addEventListener('error', function() {
       this.element.classList.add('picture-load-failure');
-    }).bind(this);
+    }.bind(this));
 
-    image.src = this._data.url;
+    image.src = this.data.url;
 
     var IMAGE_TIMEOUT = 10000;
     imageLoadTimeout = setTimeout(function() {
