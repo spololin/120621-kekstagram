@@ -1,12 +1,13 @@
 'use strict';
 
 (function() {
+  var template = document.querySelector('#picture-template');
+
   function Photo(data) {
-    this.data = data;
+    this._data = data;
   }
 
   Photo.prototype.render = function() {
-    var template = document.querySelector('#picture-template');
 
     if ('content' in template) {
       this.element = template.content.childNodes[1].cloneNode(true);
@@ -14,9 +15,8 @@
       this.element = template.childNodes[1].cloneNode(true);
     }
 
-    this.element.querySelector('.picture-likes').textContent = this.data.likes;
-    this.element.querySelector('.picture-comments').textContent = this.data.comments;
-    this.element.querySelector('.picture-comments').textContent = this.data.comments;
+    this.element.querySelector('.picture-likes').textContent = this._data.likes;
+    this.element.querySelector('.picture-comments').textContent = this._data.comments;
 
     var imgTag = this.element.querySelector('img');
     var image = new Image(182, 182);
@@ -31,7 +31,7 @@
       this.element.classList.add('picture-load-failure');
     }.bind(this));
 
-    image.src = this.data.url;
+    image.src = this._data.url;
 
     var IMAGE_TIMEOUT = 10000;
     imageLoadTimeout = setTimeout(function() {
