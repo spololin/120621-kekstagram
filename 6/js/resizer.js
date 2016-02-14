@@ -96,6 +96,7 @@
       this._ctx.setLineDash([15, 10]);
       // Смещение первого штриха от начала линии.
       this._ctx.lineDashOffset = 7;
+
       // Сохранение состояния канваса.
       // Подробней см. строку 132.
       this._ctx.save();
@@ -110,27 +111,13 @@
       // Координаты задаются от центра холста.
       this._ctx.drawImage(this._image, displX, displY);
 
-      var sizeRect = {
-        rectX: (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
-        rectY: (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
-        rectW: this._resizeConstraint.side - this._ctx.lineWidth / 2,
-        rectH: this._resizeConstraint.side - this._ctx.lineWidth / 2
-      };
-
-      //добавление маски
-      this.addMask(this._ctx.lineWidth, sizeRect);
-
       // Отрисовка прямоугольника, обозначающего область изображения после
       // кадрирования. Координаты задаются от центра.
-      //this._ctx.strokeRect(sizeRect.rectX, sizeRect.rectY, sizeRect.rectW, sizeRect.rectH);
-
-      // Отрисовка прямоугольника из кружков, обозначающего область изображения после
-      // кадрирования. Координаты задаются от центра.
-      this.drawCircleBorder(sizeRect);
-
-      //добавление размера изображения
-      var textSizeImage = this._image.naturalWidth + ' x ' + this._image.naturalHeight;
-      this.addSizeImage(textSizeImage, 0, -(this._resizeConstraint.side / 2) - this._ctx.lineWidth * 2);
+      this._ctx.strokeRect(
+          (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
+          (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
+          this._resizeConstraint.side - this._ctx.lineWidth / 2,
+          this._resizeConstraint.side - this._ctx.lineWidth / 2);
 
       // Восстановление состояния канваса, которое было до вызова ctx.save
       // и последующего изменения системы координат. Нужно для того, чтобы
@@ -139,83 +126,6 @@
       // некорректно сработает даже очистка холста или нужно будет использовать
       // сложные рассчеты для координат прямоугольника, который нужно очистить.
       this._ctx.restore();
-    },
-
-    addMask: function(strokeWidth, rect) {
-      //новый второй canvas mask
-      var mask = document.createElement('canvas');
-      var _ctxMask = mask.getContext('2d');
-      //размеры mask
-      mask.width = this._container.width;
-      mask.height = this._container.height;
-      //рисуем первую маску с размером равным размеру изображения
-      _ctxMask.beginPath();
-      _ctxMask.fillStyle = 'rgba(0, 0, 0, 0.8)';
-      _ctxMask.fillRect(0, 0, mask.width, mask.height);
-      _ctxMask.fill();
-      //xor — место пересечения фигур прозрачно
-      _ctxMask.globalCompositeOperation = 'xor';
-      //переводим систему координат в центр картинки
-      _ctxMask.translate(this._container.width / 2, this._container.height / 2);
-      //рисуем вторую маску размером в размер кадрирования с учетом обводки желтым контуром
-      _ctxMask.beginPath();
-      _ctxMask.fillRect(
-        rect.rectX - strokeWidth / 2,
-        rect.rectY - strokeWidth / 2,
-        rect.rectW + strokeWidth,
-        rect.rectH + strokeWidth);
-      _ctxMask.fill();
-      //рисуем на первом canvas _ctx
-      this._ctx.drawImage(mask, -this._container.width / 2, -this._container.height / 2);
-    },
-
-    addSizeImage: function(text, coordinateX, coordinateY) {
-      this._ctx.font = '18px Arial bold';
-      this._ctx.fillStyle = '#ffffff';
-      this._ctx.textAlign = 'center';
-      this._ctx.fillText(text, coordinateX, coordinateY);
-    },
-
-    drawCircleBorder: function(rect) {
-      //Ширина и высота квадрата
-      var widthLine = rect.rectW;
-      var heightLine = rect.rectH;
-      //один кружок + отступ
-      var pinLine = (this._ctx.lineWidth + 4);
-      //цвет кружков
-      this._ctx.fillStyle = '#ffe753';
-      //вершины apexN квадрата камки с координатами X, Y
-      var apex1 = { X: rect.rectX, Y: rect.rectY };
-      var apex2 = { X: rect.rectX + rect.rectW, Y: rect.rectY };
-      var apex3 = { X: rect.rectX + rect.rectW, Y: rect.rectY + rect.rectH };
-      var apex4 = { X: rect.rectX, Y: rect.rectY + rect.rectH };
-      //итератор i
-      var i = 0;
-      //рисуем поочередно все границы квадрата рамки
-      this._ctx.moveTo(apex1.X, apex1.Y);
-      for (i = 0; i < widthLine / pinLine; i++ ) {
-        this._ctx.beginPath();
-        this._ctx.arc(apex1.X + i * pinLine, apex1.Y, this._ctx.lineWidth / 2, 0, Math.PI * 2);
-        this._ctx.fill();
-      }
-      this._ctx.moveTo(apex2.X, apex2.Y);
-      for (i = 0; i < heightLine / pinLine; i++) {
-        this._ctx.beginPath();
-        this._ctx.arc(apex2.X, apex2.Y + i * pinLine, this._ctx.lineWidth / 2, 0, Math.PI * 2);
-        this._ctx.fill();
-      }
-      this._ctx.moveTo(apex3.X, apex3.Y);
-      for (i = 0; i < widthLine / pinLine; i++) {
-        this._ctx.beginPath();
-        this._ctx.arc(apex3.X - i * pinLine, apex3.Y, this._ctx.lineWidth / 2, 0, Math.PI * 2);
-        this._ctx.fill();
-      }
-      this._ctx.moveTo(apex4.X, apex4.Y);
-      for (i = 0; i < heightLine / pinLine; i++) {
-        this._ctx.beginPath();
-        this._ctx.arc(apex4.X, apex4.Y - i * pinLine, this._ctx.lineWidth / 2, 0, Math.PI * 2);
-        this._ctx.fill();
-      }
     },
 
     /**

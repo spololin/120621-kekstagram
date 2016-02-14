@@ -1,5 +1,4 @@
 /* global Resizer: true */
-/* global docCookies: true */
 
 /**
  * @fileoverview
@@ -46,7 +45,6 @@
    * Удаляет текущий объект {@link Resizer}, чтобы создать новый с другим
    * изображением.
    */
-
   function cleanupResizer() {
     if (currentResizer) {
       currentResizer.remove();
@@ -74,33 +72,7 @@
    * @return {boolean}
    */
   function resizeFormIsValid() {
-    //Принудительно делаем кнопку отправки данных недоступной
-    formIsValid(false);
-    //Проверка на заполнение всех полей формы
-    if ((sideValues.Top !== '') && (sideValues.Left !== '') && (sideValues.Side !== '')) {
-      //Проверяем ширину
-      var checkWidth = function() {
-        if (sideValues.Left >= 0 ) {
-          if ((sideValues.Left * 2 + sideValues.Side) <= currentResizer._image.naturalWidth) {
-            return true;
-          }
-        }
-      };
-      //Проверяем высоту
-      var checkHeight = function() {
-        if (sideValues.Top >= 0) {
-          if ((sideValues.Top * 2 + sideValues.Side) <= currentResizer._image.naturalHeight) {
-            return true;
-          }
-        }
-      };
-      if (checkHeight() && checkWidth()) {
-        return true;
-      }
-    } else {
-      formIsValid(true);
-      return false;
-    }
+    return true;
   }
 
   /**
@@ -114,14 +86,6 @@
    * @type {HTMLFormElement}
    */
   var resizeForm = document.forms['upload-resize'];
-
-  //переменные полей формы
-  var valueLeft = resizeForm['resize-x'];
-  var valueTop = resizeForm['resize-y'];
-  var valueSide = resizeForm['resize-size'];
-
-  //Объект для хранения всех значений в числах полей формы
-  var sideValues = {};
 
   /**
    * Форма добавления фильтра.
@@ -260,13 +224,9 @@
     cleanupResizer();
     updateBackground();
 
-    docCookies.setItem('filter', getRadioButton(), getDiffDate());
-
     filterForm.classList.add('invisible');
     uploadForm.classList.remove('invisible');
   };
-
-  setRadioButton();
 
   /**
    * Обработчик изменения фильтра. Добавляет класс из filterMap соответствующий
@@ -293,63 +253,6 @@
     // состояние или просто перезаписывать.
     filterImage.className = 'filter-image-preview ' + filterMap[selectedFilter];
   };
-
-  //Обработчик события изменения поля ввода Слева
-  valueLeft.onchange = function() {
-    sideValues.Left = +valueLeft.value;
-    resizeFormIsValid();
-  };
-
-  //Обработчик события изменения поля ввода Сверху
-  valueTop.onchange = function() {
-    sideValues.Top = +valueTop.value;
-    resizeFormIsValid();
-  };
-
-  //Обработчик события изменения поля ввода Сторона
-  valueSide.onchange = function() {
-    sideValues.Side = +valueSide.value;
-    resizeFormIsValid();
-  };
-
-  //Установка флага доступности кнопки отправки формы
-  function formIsValid(flag) {
-    resizeForm['resize-fwd'].disabled = flag;
-  }
-
-  //Проверяем какая радиокнопка выделена и получаем ее значение
-  function getRadioButton() {
-    var radioCollection = filterForm.getElementsByTagName('input');
-    // Перебираем коллекцию
-    for (var i = 0; i < radioCollection.length; i++) {
-      // проверяем, чтобы это был именно radio input и чтобы он был выбранный
-      if (radioCollection[i].type === 'radio' && radioCollection[i].checked) {
-        // Выводим сообщение пользователю с value выбранного элемента
-        return radioCollection[i].value;
-      }
-    }
-  }
-
-  //Установка радиокнопки при загрузке страницы
-  function setRadioButton() {
-    var elements = filterForm['upload-filter'];
-    for (var i = 0; i < elements.length; i++) {
-      if (elements[i].value === docCookies.getItem('filter')) {
-        elements[i].checked = true;
-        filterImage.className = 'filter-image-preview ' + 'filter-' + docCookies.getItem('filter');
-      }
-    }
-  }
-
-  //Получаем кол-во дней с последнего дня рождения
-  function getDiffDate() {
-    var today = new Date();
-    var currentYear = today.getFullYear();
-    var lastBirthday = new Date(currentYear, 0, 2);
-    var daysPassed = Math.floor((today - lastBirthday) / 86400000);
-    var dateToExpire = today.valueOf() + daysPassed * 24 * 60 * 60 * 1000;
-    return new Date(dateToExpire).toUTCString();
-  }
 
   cleanupResizer();
   updateBackground();
