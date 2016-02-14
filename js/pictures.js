@@ -15,28 +15,26 @@
   window.addEventListener('scroll', function() {
     clearTimeout(scrollTimeout);
     scrollTimeout = setTimeout(function() {
-      var picturesCoordinates = container.getBoundingClientRect();
-      var viewportSize = window.innerHeight;
-      if (picturesCoordinates.bottom <= viewportSize) {
-        if (currentPage < Math.ceil(filteredPictures.length / PAGE_SIZE)) {
-          renderPictures(++currentPage);
-        }
+      if (loadedNextPage()) {
+        renderPictures(++currentPage);
       }
     }, 100);
   });
+
+  // проверка необходимости загрузки новой страницы
+  function loadedNextPage() {
+    return ((container.getBoundingClientRect().bottom - 182 <= window.innerHeight) && (currentPage < Math.ceil(filteredPictures.length / PAGE_SIZE)));
+  }
 
   // функция для работы с картинками
   function addPicture(picture) {
     var element = template.content.children[0].cloneNode(true);
     element.querySelector('.picture-likes').textContent = picture.likes;
     element.querySelector('.picture-comments').textContent = picture.comments;
-
-    // добавляем картинки
     var imgTag = element.querySelector('img');
     var image = new Image(182, 182);
     var imageLoadTimeout;
 
-    // обработка событий загрузки картинок
     image.onload = function() {
       clearTimeout(imageLoadTimeout);
       element.replaceChild(image, imgTag);
@@ -47,7 +45,6 @@
     };
     image.src = picture.url;
 
-    // обработка ожидания сервера с исходниками
     var IMAGE_TIMEOUT = 10000;
     imageLoadTimeout = setTimeout(function() {
       image.src = '';
@@ -59,18 +56,27 @@
 
   //отрисовка картинок
   function renderPictures(pageNumber, replace) {
+
     if (replace) {
+      currentPage = 0;
       container.innerHTML = '';
     }
+
     var fragment = document.createDocumentFragment();
     var from = pageNumber * PAGE_SIZE;
     var to = from + PAGE_SIZE;
     var pagePictures = filteredPictures.slice(from, to);
+
     pagePictures.forEach(function(picture) {
       var element = addPicture(picture);
       fragment.appendChild(element);
     });
+
     container.appendChild(fragment);
+
+    while (loadedNextPage()) {
+      renderPictures(++currentPage);
+    }
   }
 
   //функция получения массива по ajax
@@ -79,23 +85,26 @@
     var xhr = new XMLHttpRequest();
     xhr.open('GET', '//o0.github.io/assets/json/pictures.json', true);
     xhr.timeout = 10000;
+
     xhr.onload = function(evt) {
       pictures = JSON.parse(evt.srcElement.response);
-      renderPictures(0);
       setActiveFilter(activeFilter, true);
       container.classList.remove('pictures-loading');
       filters.classList.remove('hidden');
     };
+
     xhr.onerror = function() {
       container.classList.remove('pictures-loading');
       container.classList.add('pictures-failure');
       filters.classList.add('hidden');
     };
+
     xhr.send();
   }
 
   //функция установки активного фильтра и отрисовки картинок по фильтру
   function setActiveFilter(id, force) {
+
     if (activeFilter === id && !force) {
       return;
     }
@@ -130,16 +139,10 @@
     }
 
     renderPictures(0, true);
-
-    //провекра вывода фото, если есть свободное место
-    if (container.getBoundingClientRect().bottom <= window.innerHeight) {
-      renderPictures(currentPage++);
-    }
-
     activeFilter = id;
   }
 
-  //делегирование клика по фильтрам
+  //обработчик клика по фильтрам
   filters.addEventListener('click', function(evt) {
     var clickedElement = evt.target;
     if (clickedElement.classList.contains('filters-radio')) {
