@@ -1,4 +1,4 @@
-/* global Photo: true */
+/* global Photo: true, Gallery: true */
 
 'use strict';
 
@@ -10,6 +10,7 @@
   var filteredPictures = [];
   var currentPage = 0;
   var PAGE_SIZE = 12;
+  var gallery = new Gallery();
 
   //обработчик скролла
   var scrollTimeout;
@@ -31,8 +32,9 @@
   function renderPictures(pageNumber, replace) {
     if (replace) {
       currentPage = 0;
-      var Pictures = document.querySelectorAll('.picture');
-      Array.prototype.forEach.call(Pictures, function(picture) {
+      var renderedPictures = document.querySelectorAll('.picture');
+      Array.prototype.forEach.call(renderedPictures, function(picture) {
+        picture.removeEventListener('click', _onClick);
         container.removeChild(picture);
       });
     }
@@ -43,9 +45,10 @@
     var pagePictures = filteredPictures.slice(from, to);
 
     pagePictures.forEach(function(picture) {
-      var element = new Photo(picture);
-      element.render();
-      fragment.appendChild(element.element);
+      var elementPicture = new Photo(picture);
+      elementPicture.render();
+      fragment.appendChild(elementPicture.element);
+      elementPicture.element.addEventListener('click', _onClick);
     });
 
     container.appendChild(fragment);
@@ -53,6 +56,11 @@
     while (loadedNextPage()) {
       renderPictures(++currentPage);
     }
+  }
+
+  function _onClick(evt) {
+    evt.preventDefault();
+    gallery.show();
   }
 
   //функция получения массива по ajax
