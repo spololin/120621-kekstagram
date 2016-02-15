@@ -1,8 +1,9 @@
+/* global Photo: true */
+
 'use strict';
 
 (function() {
   var container = document.querySelector('.pictures');
-  var template = document.querySelector('#picture-template');
   var filters = document.querySelector('.filters');
   var activeFilter = 'filter-popular';
   var pictures = [];
@@ -26,40 +27,14 @@
     return ((container.getBoundingClientRect().bottom - 182 <= window.innerHeight) && (currentPage < Math.ceil(filteredPictures.length / PAGE_SIZE)));
   }
 
-  // функция для работы с картинками
-  function addPicture(picture) {
-    var element = template.content.children[0].cloneNode(true);
-    element.querySelector('.picture-likes').textContent = picture.likes;
-    element.querySelector('.picture-comments').textContent = picture.comments;
-    var imgTag = element.querySelector('img');
-    var image = new Image(182, 182);
-    var imageLoadTimeout;
-
-    image.onload = function() {
-      clearTimeout(imageLoadTimeout);
-      element.replaceChild(image, imgTag);
-    };
-
-    image.onerror = function() {
-      element.classList.add('picture-load-failure');
-    };
-    image.src = picture.url;
-
-    var IMAGE_TIMEOUT = 10000;
-    imageLoadTimeout = setTimeout(function() {
-      image.src = '';
-      element.classList.add('picture-load-failure');
-    }, IMAGE_TIMEOUT);
-
-    return element;
-  }
-
   //отрисовка картинок
   function renderPictures(pageNumber, replace) {
-
     if (replace) {
       currentPage = 0;
-      container.innerHTML = '';
+      var Pictures = document.querySelectorAll('.picture');
+      Array.prototype.forEach.call(Pictures, function(picture) {
+        container.removeChild(picture);
+      });
     }
 
     var fragment = document.createDocumentFragment();
@@ -68,8 +43,9 @@
     var pagePictures = filteredPictures.slice(from, to);
 
     pagePictures.forEach(function(picture) {
-      var element = addPicture(picture);
-      fragment.appendChild(element);
+      var element = new Photo(picture);
+      element.render();
+      fragment.appendChild(element.element);
     });
 
     container.appendChild(fragment);
