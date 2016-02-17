@@ -15,5 +15,5 @@
 
   }
 
-  window.inheret = inherit;
+  window.inherit = inherit;
 })();
