@@ -5,6 +5,7 @@
 
   function Photo(data) {
     this._data = data;
+    this.onPhotoClick = this.onPhotoClick.bind(this);
   }
 
   Photo.prototype.render = function() {
@@ -39,6 +40,21 @@
       this.element.classList.add('picture-load-failure');
     }.bind(this), IMAGE_TIMEOUT);
   };
+
+  Photo.prototype.onPhotoClick = function(evt) {
+    evt.preventDefault();
+    if (
+      this.element.classList.contains('picture') &&
+      !this.element.classList.contains('picture-load-failure')
+    ) {
+      //Вызываем коллбэк, который будет переопределен снаружи
+      if (typeof this.onClick === 'function') {
+        this.onClick();
+      }
+    }
+  };
+
+  Photo.prototype.onClick = null;
 
   window.Photo = Photo;
 })();
