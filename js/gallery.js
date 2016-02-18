@@ -1,6 +1,8 @@
 'use strict';
 
 (function() {
+  var numberPicture = 0;
+
   function Gallery() {
     this.element = document.querySelector('.gallery-overlay');
     this.closeButton = document.querySelector('.gallery-overlay-close');
@@ -16,7 +18,7 @@
 
   Gallery.prototype.render = function() {
     this.show();
-    this.setCurrentPicture(0);
+    this.setCurrentPicture(numberPicture);
   };
 
   Gallery.prototype.show = function() {
@@ -39,15 +41,30 @@
 
   Gallery.prototype._onPhotoClick = function() {
     if (this.pictures[this.currentImage + 1]) {
-      ++this.currentImage;
-    } else {
-      this.currentImage = 0;
+      this.setCurrentPicture(++this.currentImage);
     }
   };
 
   Gallery.prototype._onDocumentKeyDown = function(evt) {
     if (evt.keyCode === 27) {
       this.hide();
+    } else {
+      if (evt.keyCode === 39) {
+        if (this.currentImage === this.pictures.length - 1) {
+          this.currentImage = 0;
+        } else {
+          ++this.currentImage;
+        }
+      }
+
+      if (evt.keyCode === 37) {
+        if (this.currentImage === 0) {
+          this.currentImage = this.pictures.length - 1;
+        } else {
+          --this.currentImage;
+        }
+      }
+      this.setCurrentPicture(this.currentImage);
     }
   };
 
@@ -57,27 +74,31 @@
 
   Gallery.prototype.setCurrentPicture = function(index) {
     var picture;
-    if (typeof key === 'number') {
+    if (typeof index === 'number') {
       picture = this.pictures[index];
-    } else {
-      for (var i = 0; i < this.pictures.length; i++) {
-        if (this.pictures[i].url === index) {
-          picture = this.pictures[i];
-          break;
-        }
-      }
     }
-    this.photo.src = picture.url;
+
+    this.photo.src = this.pictures[index].url;
     this.likes.querySelector('.likes-count').textContent = picture.likes;
     this.comments.querySelector('.comments-count').textContent = picture.comments;
   };
 
   Gallery.prototype.setData = function(data) {
     this._data = data;
+    numberPicture = this.getNumberPicture(data.url);
   };
 
   Gallery.prototype.getData = function() {
     return this._data;
+  };
+
+  Gallery.prototype.getNumberPicture = function(url) {
+    for (var i = 0; i < this.pictures.length; i++) {
+      if (url === this.pictures[i].url) {
+        this.currentImage = i;
+        return i;
+      }
+    }
   };
 
   window.Gallery = Gallery;

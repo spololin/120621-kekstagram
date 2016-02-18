@@ -60,11 +60,7 @@
   };
 
   Photo.prototype.remove = function() {
-    // Удалить обработчики на элементе this.element
     this.element.removeEventListener('click', this._onPhotoClick);
-
-    // Удалить элемент this.element из DOM-дерева
-
   };
 
   Photo.prototype.setData = function(data) {

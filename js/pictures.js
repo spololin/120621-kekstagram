@@ -1,5 +1,3 @@
-/* global Photo: true, Gallery: true */
-
 'use strict';
 
 (function() {
@@ -33,11 +31,6 @@
   function renderPictures(pageNumber, replace) {
     if (replace) {
       currentPage = 0;
-      //var renderedPictures = document.querySelectorAll('.picture');
-      //Array.prototype.forEach.call(renderedPictures, function(picture) {
-      //  picture.removeEventListener('click', _onClick);
-      //  container.removeChild(picture);
-      //});
       var el;
       while ((el = renderedPictures.shift())) {
         container.removeChild(el.element);
@@ -56,21 +49,14 @@
       elementPicture.setData(picture);
       elementPicture.render();
       fragment.appendChild(elementPicture.element);
-      //elementPicture.element.addEventListener('click', _onClick);
 
       elementPicture.onClick = function() {
         gallery.setData(elementPicture.getData());
         gallery.render();
       };
+
       return elementPicture;
     }));
-
-    //pagePictures.forEach(function(picture) {
-    //  var elementPicture = new Photo(picture);
-    //  elementPicture.render();
-    //  fragment.appendChild(elementPicture.element);
-    //  elementPicture.element.addEventListener('click', _onClick);
-    //});
 
     container.appendChild(fragment);
 
@@ -78,11 +64,6 @@
       renderPictures(++currentPage);
     }
   }
-
-  //function _onClick(evt) {
-  //  evt.preventDefault();
-  //  gallery.show();
-  //}
 
   //функция получения массива по ajax
   function getPictures() {
@@ -96,8 +77,6 @@
       setActiveFilter(activeFilter, true);
       container.classList.remove('pictures-loading');
       filters.classList.remove('hidden');
-      //gallery.setCurrentPicture(matchedHash[1]);
-      //gallery.show();
     };
 
     xhr.onerror = function() {
