@@ -14,6 +14,11 @@
     this._onCloseClick = this._onCloseClick.bind(this);
   }
 
+  Gallery.prototype.render = function() {
+    this.show();
+    this.setCurrentPicture(0);
+  };
+
   Gallery.prototype.show = function() {
     this.element.classList.remove('invisible');
     this.closeButton.addEventListener('click', this._onCloseClick);
@@ -34,10 +39,9 @@
 
   Gallery.prototype._onPhotoClick = function() {
     if (this.pictures[this.currentImage + 1]) {
-      //alert('1');
+      ++this.currentImage;
     } else {
       this.currentImage = 0;
-      //alert('2');
     }
   };
 
@@ -66,6 +70,14 @@
     this.photo.src = picture.url;
     this.likes.querySelector('.likes-count').textContent = picture.likes;
     this.comments.querySelector('.comments-count').textContent = picture.comments;
+  };
+
+  Gallery.prototype.setData = function(data) {
+    this._data = data;
+  };
+
+  Gallery.prototype.getData = function() {
+    return this._data;
   };
 
   window.Gallery = Gallery;

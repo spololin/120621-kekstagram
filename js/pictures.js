@@ -8,6 +8,7 @@
   var activeFilter = 'filter-popular';
   var pictures = [];
   var filteredPictures = [];
+  var renderedPictures = [];
   var currentPage = 0;
   var PAGE_SIZE = 12;
   var gallery = new Gallery();
@@ -32,11 +33,17 @@
   function renderPictures(pageNumber, replace) {
     if (replace) {
       currentPage = 0;
-      var renderedPictures = document.querySelectorAll('.picture');
-      Array.prototype.forEach.call(renderedPictures, function(picture) {
-        picture.removeEventListener('click', _onClick);
-        container.removeChild(picture);
-      });
+      //var renderedPictures = document.querySelectorAll('.picture');
+      //Array.prototype.forEach.call(renderedPictures, function(picture) {
+      //  picture.removeEventListener('click', _onClick);
+      //  container.removeChild(picture);
+      //});
+      var el;
+      while ((el = renderedPictures.shift())) {
+        container.removeChild(el.element);
+        el.onClick = null;
+        el.remove();
+      }
     }
 
     var fragment = document.createDocumentFragment();
@@ -44,12 +51,26 @@
     var to = from + PAGE_SIZE;
     var pagePictures = filteredPictures.slice(from, to);
 
-    pagePictures.forEach(function(picture) {
+    renderedPictures = renderedPictures.concat(pagePictures.map(function(picture) {
       var elementPicture = new Photo(picture);
+      elementPicture.setData(picture);
       elementPicture.render();
       fragment.appendChild(elementPicture.element);
-      elementPicture.element.addEventListener('click', _onClick);
-    });
+      //elementPicture.element.addEventListener('click', _onClick);
+
+      elementPicture.onClick = function() {
+        gallery.setData(elementPicture.getData());
+        gallery.render();
+      };
+      return elementPicture;
+    }));
+
+    //pagePictures.forEach(function(picture) {
+    //  var elementPicture = new Photo(picture);
+    //  elementPicture.render();
+    //  fragment.appendChild(elementPicture.element);
+    //  elementPicture.element.addEventListener('click', _onClick);
+    //});
 
     container.appendChild(fragment);
 
@@ -58,10 +79,10 @@
     }
   }
 
-  function _onClick(evt) {
-    evt.preventDefault();
-    gallery.show();
-  }
+  //function _onClick(evt) {
+  //  evt.preventDefault();
+  //  gallery.show();
+  //}
 
   //функция получения массива по ajax
   function getPictures() {
@@ -75,6 +96,8 @@
       setActiveFilter(activeFilter, true);
       container.classList.remove('pictures-loading');
       filters.classList.remove('hidden');
+      //gallery.setCurrentPicture(matchedHash[1]);
+      //gallery.show();
     };
 
     xhr.onerror = function() {
@@ -122,6 +145,7 @@
         break;
     }
 
+    gallery.setPictures(filteredPictures);
     renderPictures(0, true);
     activeFilter = id;
   }

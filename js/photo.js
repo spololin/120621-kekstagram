@@ -39,6 +39,8 @@
       image.src = '';
       this.element.classList.add('picture-load-failure');
     }.bind(this), IMAGE_TIMEOUT);
+
+    this.element.addEventListener('click', this.onPhotoClick);
   };
 
   Photo.prototype.onPhotoClick = function(evt) {
@@ -47,11 +49,30 @@
       this.element.classList.contains('picture') &&
       !this.element.classList.contains('picture-load-failure')
     ) {
-      //Вызываем коллбэк, который будет переопределен снаружи
       if (typeof this.onClick === 'function') {
         this.onClick();
       }
     }
+  };
+
+  Photo.prototype.hide = function() {
+    this.element.removeEventListener('click', this._onPhotoClick);
+  };
+
+  Photo.prototype.remove = function() {
+    // Удалить обработчики на элементе this.element
+    this.element.removeEventListener('click', this._onPhotoClick);
+
+    // Удалить элемент this.element из DOM-дерева
+
+  };
+
+  Photo.prototype.setData = function(data) {
+    this._data = data;
+  };
+
+  Photo.prototype.getData = function() {
+    return this._data;
   };
 
   Photo.prototype.onClick = null;
