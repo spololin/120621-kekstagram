@@ -39,7 +39,7 @@
   };
 
   Gallery.prototype._onPhotoClick = function() {
-    this.nextPicture();
+    this.setNextPictureIndex();
     this.setCurrentPicture(this.currentPicture);
   };
 
@@ -48,11 +48,11 @@
       this.hide();
     } else {
       if (evt.keyCode === 39) {
-        this.nextPicture();
+        this.setNextPictureIndex();
       }
 
       if (evt.keyCode === 37) {
-        this.prevPicture();
+        this.setPrevPictureIndex();
       }
       this.setCurrentPicture(this.currentPicture);
     }
@@ -82,13 +82,13 @@
     }
   };
 
-  Gallery.prototype.nextPicture = function() {
+  Gallery.prototype.setNextPictureIndex = function() {
     if (this.pictures[this.currentPicture + 1]) {
       ++this.currentPicture;
     }
   };
 
-  Gallery.prototype.prevPicture = function() {
+  Gallery.prototype.setPrevPictureIndex = function() {
     if (this.pictures[this.currentPicture - 1]) {
       --this.currentPicture;
     }
