@@ -73,10 +73,6 @@
     this.currentPicture = this.getNumberPicture(data.url);
   };
 
-  Gallery.prototype.getData = function() {
-    return this._data;
-  };
-
   Gallery.prototype.getNumberPicture = function(url) {
     for (var i = 0; i < this.pictures.length; i++) {
       if (url === this.pictures[i].url) {

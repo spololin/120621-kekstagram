@@ -79,6 +79,8 @@
       setActiveFilter(activeFilter, true);
       container.classList.remove('pictures-loading');
       filters.classList.remove('hidden');
+      //gallery.setCurrentPicture(1);
+      //gallery.show();
     });
 
     xhr.addEventListener('error', function() {
