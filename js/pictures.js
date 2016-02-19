@@ -1,3 +1,5 @@
+/* global Gallery: true, Photo: true */
+
 'use strict';
 
 (function() {
@@ -72,18 +74,18 @@
     xhr.open('GET', '//o0.github.io/assets/json/pictures.json', true);
     xhr.timeout = 10000;
 
-    xhr.onload = function(evt) {
+    xhr.addEventListener('load', function(evt) {
       pictures = JSON.parse(evt.srcElement.response);
       setActiveFilter(activeFilter, true);
       container.classList.remove('pictures-loading');
       filters.classList.remove('hidden');
-    };
+    });
 
-    xhr.onerror = function() {
+    xhr.addEventListener('error', function() {
       container.classList.remove('pictures-loading');
       container.classList.add('pictures-failure');
       filters.classList.add('hidden');
-    };
+    });
 
     xhr.send();
   }
