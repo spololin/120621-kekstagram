@@ -84,13 +84,13 @@
 
   Gallery.prototype.setNextPictureIndex = function() {
     if (this.pictures[this.currentPicture + 1]) {
-      ++this.currentPicture;
+      this.currentPicture++;
     }
   };
 
   Gallery.prototype.setPrevPictureIndex = function() {
     if (this.pictures[this.currentPicture - 1]) {
-      --this.currentPicture;
+      this.currentPicture--;
     }
   };
 

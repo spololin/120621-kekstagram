@@ -26,7 +26,8 @@
 
   // проверка необходимости загрузки новой страницы
   function loadedNextPage() {
-    return ((container.getBoundingClientRect().bottom - 182 <= window.innerHeight) && (currentPage < Math.ceil(filteredPictures.length / PAGE_SIZE)));
+    var PICTURE_HEIGHT = 182;// Высота одного фото
+    return ((container.getBoundingClientRect().bottom - PICTURE_HEIGHT <= window.innerHeight) && (currentPage < Math.ceil(filteredPictures.length / PAGE_SIZE)));
   }
 
   //отрисовка картинок
@@ -79,8 +80,6 @@
       setActiveFilter(activeFilter, true);
       container.classList.remove('pictures-loading');
       filters.classList.remove('hidden');
-      //gallery.setCurrentPicture(1);
-      //gallery.show();
     });
 
     xhr.addEventListener('error', function() {
