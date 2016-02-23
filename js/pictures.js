@@ -1,4 +1,4 @@
-/* global Photo: true, Gallery: true */
+/* global Gallery: true, Photo: true */
 
 'use strict';
 
@@ -8,6 +8,7 @@
   var activeFilter = 'filter-popular';
   var pictures = [];
   var filteredPictures = [];
+  var renderedPictures = [];
   var currentPage = 0;
   var PAGE_SIZE = 12;
   var gallery = new Gallery();
@@ -25,18 +26,20 @@
 
   // проверка необходимости загрузки новой страницы
   function loadedNextPage() {
-    return ((container.getBoundingClientRect().bottom - 182 <= window.innerHeight) && (currentPage < Math.ceil(filteredPictures.length / PAGE_SIZE)));
+    var PICTURE_HEIGHT = 182;// Высота одного фото
+    return ((container.getBoundingClientRect().bottom - PICTURE_HEIGHT <= window.innerHeight) && (currentPage < Math.ceil(filteredPictures.length / PAGE_SIZE)));
   }
 
   //отрисовка картинок
   function renderPictures(pageNumber, replace) {
     if (replace) {
       currentPage = 0;
-      var renderedPictures = document.querySelectorAll('.picture');
-      Array.prototype.forEach.call(renderedPictures, function(picture) {
-        picture.removeEventListener('click', _onClick);
-        container.removeChild(picture);
-      });
+      var el;
+      while ((el = renderedPictures.shift())) {
+        container.removeChild(el.element);
+        el.onClick = null;
+        el.remove();
+      }
     }
 
     var fragment = document.createDocumentFragment();
@@ -44,23 +47,25 @@
     var to = from + PAGE_SIZE;
     var pagePictures = filteredPictures.slice(from, to);
 
-    pagePictures.forEach(function(picture) {
+    renderedPictures = renderedPictures.concat(pagePictures.map(function(picture) {
       var elementPicture = new Photo(picture);
+      elementPicture.setData(picture);
       elementPicture.render();
       fragment.appendChild(elementPicture.element);
-      elementPicture.element.addEventListener('click', _onClick);
-    });
+
+      elementPicture.onClick = function() {
+        gallery.setData(elementPicture.getData());
+        gallery.render();
+      };
+
+      return elementPicture;
+    }));
 
     container.appendChild(fragment);
 
     while (loadedNextPage()) {
       renderPictures(++currentPage);
     }
-  }
-
-  function _onClick(evt) {
-    evt.preventDefault();
-    gallery.show();
   }
 
   //функция получения массива по ajax
@@ -70,18 +75,18 @@
     xhr.open('GET', '//o0.github.io/assets/json/pictures.json', true);
     xhr.timeout = 10000;
 
-    xhr.onload = function(evt) {
+    xhr.addEventListener('load', function(evt) {
       pictures = JSON.parse(evt.srcElement.response);
       setActiveFilter(activeFilter, true);
       container.classList.remove('pictures-loading');
       filters.classList.remove('hidden');
-    };
+    });
 
-    xhr.onerror = function() {
+    xhr.addEventListener('error', function() {
       container.classList.remove('pictures-loading');
       container.classList.add('pictures-failure');
       filters.classList.add('hidden');
-    };
+    });
 
     xhr.send();
   }
@@ -122,6 +127,7 @@
         break;
     }
 
+    gallery.setPictures(filteredPictures);
     renderPictures(0, true);
     activeFilter = id;
   }

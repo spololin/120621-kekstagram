@@ -1,3 +1,4 @@
+/* global inherit: true, PhotoBase: true*/
 'use strict';
 
 (function() {
@@ -5,7 +6,10 @@
 
   function Photo(data) {
     this._data = data;
+    this.onPhotoClick = this.onPhotoClick.bind(this);
   }
+
+  inherit(Photo, PhotoBase);
 
   Photo.prototype.render = function() {
 
@@ -38,7 +42,26 @@
       image.src = '';
       this.element.classList.add('picture-load-failure');
     }.bind(this), IMAGE_TIMEOUT);
+
+    this.element.addEventListener('click', this.onPhotoClick);
   };
+
+  Photo.prototype.onPhotoClick = function(evt) {
+    evt.preventDefault();
+    if (
+      this.element.classList.contains('picture') &&
+      !this.element.classList.contains('picture-load-failure')
+    ) {
+      if (typeof this.onClick === 'function') {
+        this.onClick();
+      }
+    }
+  };
+
+  Photo.prototype.remove = function() {
+    this.element.removeEventListener('click', this._onPhotoClick);
+  };
+
 
   window.Photo = Photo;
 })();
