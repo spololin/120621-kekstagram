@@ -58,23 +58,10 @@
     }
   };
 
-  Photo.prototype.hide = function() {
-    this.element.removeEventListener('click', this._onPhotoClick);
-  };
-
   Photo.prototype.remove = function() {
     this.element.removeEventListener('click', this._onPhotoClick);
   };
 
-  //Photo.prototype.setData = function(data) {
-  //  this._data = data;
-  //};
-  //
-  //Photo.prototype.getData = function() {
-  //  return this._data;
-  //};
-
-  Photo.prototype.onClick = null;
 
   window.Photo = Photo;
 })();

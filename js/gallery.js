@@ -70,6 +70,12 @@
     this.photo.src = this.pictures[index].url;
     this.likes.querySelector('.likes-count').textContent = this.pictures[index].likes;
     this.comments.querySelector('.comments-count').textContent = this.pictures[index].comments;
+
+    if (this.pictures[index].liked === true) {
+      this.likesCount.classList.add('likes-count-liked');
+    } else {
+      this.likesCount.classList.remove('likes-count-liked');
+    }
   };
 
   Gallery.prototype.setData = function(data) {
