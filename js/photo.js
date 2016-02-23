@@ -1,3 +1,4 @@
+/* global inherit: true, PhotoBase: true*/
 'use strict';
 
 (function() {
@@ -7,6 +8,8 @@
     this._data = data;
     this.onPhotoClick = this.onPhotoClick.bind(this);
   }
+
+  inherit(Photo, PhotoBase);
 
   Photo.prototype.render = function() {
 
@@ -63,13 +66,13 @@
     this.element.removeEventListener('click', this._onPhotoClick);
   };
 
-  Photo.prototype.setData = function(data) {
-    this._data = data;
-  };
-
-  Photo.prototype.getData = function() {
-    return this._data;
-  };
+  //Photo.prototype.setData = function(data) {
+  //  this._data = data;
+  //};
+  //
+  //Photo.prototype.getData = function() {
+  //  return this._data;
+  //};
 
   Photo.prototype.onClick = null;
 
