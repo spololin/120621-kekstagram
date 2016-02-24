@@ -105,6 +105,7 @@
 
       var displX = -(this._resizeConstraint.x + this._resizeConstraint.side / 2);
       var displY = -(this._resizeConstraint.y + this._resizeConstraint.side / 2);
+
       // Отрисовка изображения на холсте. Параметры задают изображение, которое
       // нужно отрисовать и координаты его верхнего левого угла.
       // Координаты задаются от центра холста.
@@ -141,6 +142,11 @@
       this._ctx.restore();
     },
 
+    /**
+     * Отрисовка маски
+     * @param strokeWidth
+     * @param rect
+     */
     addMask: function(strokeWidth, rect) {
       //новый второй canvas mask
       var mask = document.createElement('canvas');
@@ -169,6 +175,12 @@
       this._ctx.drawImage(mask, -this._container.width / 2, -this._container.height / 2);
     },
 
+    /**
+     * Добавление размера загруженной фотографии
+     * @param text
+     * @param coordinateX
+     * @param coordinateY
+     */
     addSizeImage: function(text, coordinateX, coordinateY) {
       this._ctx.font = '18px Arial bold';
       this._ctx.fillStyle = '#ffffff';
@@ -176,6 +188,10 @@
       this._ctx.fillText(text, coordinateX, coordinateY);
     },
 
+    /**
+     * Маска в виде окружностей
+     * @param rect
+     */
     drawCircleBorder: function(rect) {
       //Ширина и высота квадрата
       var widthLine = rect.rectW;

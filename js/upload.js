@@ -231,13 +231,18 @@
     }
   });
 
-  //Обработчик изменения формы с данными и установка новых значений для кадра
+  /**
+   * Обработчик изменения формы с данными и установка новых значений для кадра
+   */
   resizeForm.addEventListener('change', function() {
     validateForm(resizeFormIsValid());
     currentResizer.setConstraint(+resizeForm.elements['resize-x'].value, +resizeForm.elements['resize-y'].value, +resizeForm.elements['resize-size'].value);
   });
 
-  //Установка ограничений на отправку данных и отображение предупреждения
+  /**
+   * Установка ограничений на отправку данных и отображение предупреждения
+   * @param {boolean} valid
+   */
   function validateForm(valid) {
     if (valid) {
       buttonSubmit.style.display = 'block';
@@ -315,7 +320,10 @@
     filterImage.className = 'filter-image-preview ' + filterMap[selectedFilter];
   });
 
-  //Проверяем какая радиокнопка выделена и получаем ее значение
+  /**
+   * Проверяем какая радиокнопка выделена и получаем ее значение
+   * @returns {string}
+   */
   function getRadioButton() {
     var radioCollection = filterForm.getElementsByTagName('input');
     for (var i = 0; i < radioCollection.length; i++) {
@@ -325,7 +333,9 @@
     }
   }
 
-  //Установка радиокнопки при загрузке страницы
+  /**
+   * Установка радиокнопки при загрузке страницы
+   */
   function setRadioButton() {
     var elements = filterForm['upload-filter'];
     for (var i = 0; i < elements.length; i++) {
@@ -336,7 +346,10 @@
     }
   }
 
-  //Получаем кол-во дней с последнего дня рождения
+  /**
+   * Получаем кол-во дней с последнего дня рождения
+   * @returns {string}
+   */
   function getDiffDate() {
     var today = new Date();
     var currentYear = today.getFullYear();
@@ -346,7 +359,9 @@
     return new Date(dateToExpire).toUTCString();
   }
 
-  //Получение значений смещений и размера кадра в поля формы.
+  /**
+   * Получение значений смещений и размера кадра в поля формы
+   */
   function updateConstraint() {
     var constraint = currentResizer.getConstraint();
     resizeForm['resize-x'].value = Math.floor(constraint.x);
@@ -355,7 +370,9 @@
     validateForm(resizeFormIsValid());
   }
 
-  //Установка значений смещения на форму
+  /**
+   * Установка значений смещения на форму
+   */
   window.addEventListener('resizerchange', updateConstraint);
 
   setRadioButton();

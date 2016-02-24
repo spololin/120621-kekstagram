@@ -3,34 +3,90 @@
 'use strict';
 
 (function() {
+  /**
+   * Контейнер для всех загруженных фотографий
+   * @type {Element}
+   */
   var container = document.querySelector('.pictures');
+
+  /**
+   * Форма с фильтрами
+   * @type {Element}
+   */
   var filters = document.querySelector('.filters');
+
+  /**
+   * Активный фильтр
+   * @type {string}
+   */
   var activeFilter = 'filter-popular';
+
+  /**
+   * Массив объектов загруженных фотографий
+   * @type {Photo[]}
+   */
   var pictures = [];
+
+  /**
+   * Массив отфильтрованных фотографий
+   * @type {Photo[]}
+   */
   var filteredPictures = [];
+
+  /**
+   * Массив отрисованных фотографий
+   * @type {Photo[]}
+   */
   var renderedPictures = [];
+
+  /**
+   * Текущая страница с фотографиями
+   * @type {number}
+   */
   var currentPage = 0;
+
+  /**
+   * @const
+   * @type {number}
+   */
   var PAGE_SIZE = 12;
+
+  /**
+   * @type (Gallery)
+   */
   var gallery = new Gallery();
 
-  //обработчик скролла
+  /**
+   * Таймаут для строла
+   */
   var scrollTimeout;
+
+  /**
+   * Событие скролла
+   */
   window.addEventListener('scroll', function() {
     clearTimeout(scrollTimeout);
     scrollTimeout = setTimeout(function() {
       if (loadedNextPage()) {
-        renderPictures(++currentPage);
+        renderPictures(++currentPage, false);
       }
     }, 100);
   });
 
-  // проверка необходимости загрузки новой страницы
+  /**
+   * Проверка необходимости загрузки новой страницы
+   * @returns {boolean}
+   */
   function loadedNextPage() {
     var PICTURE_HEIGHT = 182;// Высота одного фото
     return ((container.getBoundingClientRect().bottom - PICTURE_HEIGHT <= window.innerHeight) && (currentPage < Math.ceil(filteredPictures.length / PAGE_SIZE)));
   }
 
-  //отрисовка картинок
+  /**
+   * Отрисовка картинок
+   * @param {number} pageNumber - номер страницы отображения
+   * @param {boolean} replace - если истина, то удаляет все существующие DOM-элементы с фотографиями
+   */
   function renderPictures(pageNumber, replace) {
     if (replace) {
       currentPage = 0;
@@ -64,11 +120,13 @@
     container.appendChild(fragment);
 
     while (loadedNextPage()) {
-      renderPictures(++currentPage);
+      renderPictures(++currentPage, false);
     }
   }
 
-  //функция получения массива по ajax
+  /**
+   * Функция получения массива по ajax
+   */
   function getPictures() {
     container.classList.add('pictures-loading');
     var xhr = new XMLHttpRequest();
@@ -77,7 +135,7 @@
 
     xhr.addEventListener('load', function(evt) {
       pictures = JSON.parse(evt.srcElement.response);
-      setActiveFilter(activeFilter, true);
+      setActiveFilter(activeFilter);
       container.classList.remove('pictures-loading');
       filters.classList.remove('hidden');
     });
@@ -91,10 +149,13 @@
     xhr.send();
   }
 
-  //функция установки активного фильтра и отрисовки картинок по фильтру
-  function setActiveFilter(id, force) {
+  /**
+   * Функция установки активного фильтра и отрисовки картинок по фильтру
+   * @param id - устанавливаемый фильтр
+   */
+  function setActiveFilter(id) {
 
-    if (activeFilter === id && !force) {
+    if (activeFilter === id) {
       return;
     }
 
@@ -132,7 +193,9 @@
     activeFilter = id;
   }
 
-  //обработчик клика по фильтрам
+  /**
+   * Обработчик клика по фильтрам
+   */
   filters.addEventListener('click', function(evt) {
     var clickedElement = evt.target;
     if (clickedElement.classList.contains('filters-radio')) {
