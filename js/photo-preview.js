@@ -1,4 +1,4 @@
-/* global inherit: true, PhotoBase: true */
+///* global inherit: true, PhotoBase: true */
 
 'use strict';
 

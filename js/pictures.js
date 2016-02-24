@@ -1,5 +1,7 @@
 ///* global Gallery: true, Photo: true */
 
+/* global requirejs: true */
+
 'use strict';
 
 requirejs.config({
