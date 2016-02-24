@@ -1,6 +1,6 @@
 'use strict';
 
-(function() {
+define(function() {
 
   /**
    * Наследует один объект от другого
@@ -19,5 +19,6 @@
 
   }
 
-  window.inherit = inherit;
-})();
+  return inherit;
+  //window.inherit = inherit;
+});

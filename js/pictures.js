@@ -1,8 +1,15 @@
-/* global Gallery: true, Photo: true */
+///* global Gallery: true, Photo: true */
 
 'use strict';
 
-(function() {
+requirejs.config({
+  baseURI: 'js'
+});
+
+define([
+  'gallery',
+  'photo'
+], function(Gallery, Photo) {
   /**
    * Контейнер для всех загруженных фотографий
    * @type {Element}
@@ -135,7 +142,7 @@
 
     xhr.addEventListener('load', function(evt) {
       pictures = JSON.parse(evt.srcElement.response);
-      setActiveFilter(activeFilter);
+      setActiveFilter(activeFilter, true);
       container.classList.remove('pictures-loading');
       filters.classList.remove('hidden');
     });
@@ -153,9 +160,9 @@
    * Функция установки активного фильтра и отрисовки картинок по фильтру
    * @param id - устанавливаемый фильтр
    */
-  function setActiveFilter(id) {
+  function setActiveFilter(id, force) {
 
-    if (activeFilter === id) {
+    if (activeFilter === id && !force) {
       return;
     }
 
@@ -205,4 +212,4 @@
 
   getPictures();
 
-})();
+});

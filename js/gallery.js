@@ -1,6 +1,6 @@
 'use strict';
 
-(function() {
+define(function() {
 
   /**
    * Конструктор галереи
@@ -257,5 +257,6 @@
     }
   };
 
-  window.Gallery = Gallery;
-})();
+  return Gallery;
+  //window.Gallery = Gallery;
+});

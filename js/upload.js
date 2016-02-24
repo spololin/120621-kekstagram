@@ -1,4 +1,4 @@
-/* global docCookies: true, Resizer : true */
+///* global docCookies: true */
 
 /**
  * @fileoverview
@@ -7,7 +7,10 @@
 
 'use strict';
 
-(function() {
+define([
+  '../libs/cookies',
+  'resizer'
+], function(docCookies, Resizer) {
   /** @enum {string} */
   var FileType = {
     'GIF': '',
@@ -378,4 +381,4 @@
   setRadioButton();
   cleanupResizer();
   updateBackground();
-})();
+});
