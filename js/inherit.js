@@ -4,8 +4,8 @@
 
   /**
    * Наследует один объект от другого
-   * @param {function} child constructor function
-   * @param {function} parent constructor function
+   * @param {function} child - Конструктор потомка
+   * @param {function} parent - Конструктор предка
    */
   function inherit(child, parent) {
 

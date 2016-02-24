@@ -4,8 +4,8 @@
   /**
    * Метод генерирует инфо-сообщение о загруженной фотографии
    * в зависимости от его расширения
-   * @param a
-   * @param b
+   * @param {boolean|number|object} a - параметр для анализа
+   * @param {object} b - параметр для анализа
    * @returns {string} - сообщение
    */
   function getMessage(a, b) {

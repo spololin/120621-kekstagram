@@ -76,7 +76,7 @@
     this._onDocumentKeyDown = this._onDocumentKeyDown.bind(this);
 
       /**
-       * Подписка на событие нажатия на крестик для загрытия галлереи
+       * Подписка на событие нажатия на крестик для загрытия галереи
        * @type {function(this:Gallery)}
        * @private
        */
@@ -91,7 +91,7 @@
   }
 
   /**
-   * Вызывающий метод для отображения галлереи
+   * Вызывающий метод для отображения галереи
    * @method
    */
   Gallery.prototype.render = function() {
@@ -100,7 +100,7 @@
   };
 
   /**
-   * Основной метод для отображения галлереи
+   * Основной метод для отображения галереи
    * @method
    */
   Gallery.prototype.show = function() {
@@ -112,7 +112,7 @@
   };
 
   /**
-   * Основной метод закрытия галлереи
+   * Основной метод закрытия галереи
    * @method
    */
   Gallery.prototype.hide = function() {
@@ -169,7 +169,7 @@
   /**
    * Mетод массив фотографий из json сохраняет в объекте
    * @method
-   * @param {Photo[]} pictures
+   * @param {Photo[]} pictures - массив фотографий
    */
   Gallery.prototype.setPictures = function(pictures) {
     this.pictures = pictures;
