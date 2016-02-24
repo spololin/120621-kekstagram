@@ -1,6 +1,13 @@
 'use strict';
 
 (function() {
+  /**
+   * Метод генерирует инфо-сообщение о загруженной фотографии
+   * в зависимости от его расширения
+   * @param a
+   * @param b
+   * @returns {string} - сообщение
+   */
   function getMessage(a, b) {
     if (typeof(a) === 'boolean') {
       if (a) {
