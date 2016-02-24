@@ -1,4 +1,3 @@
-///* global inherit: true, PhotoBase: true*/
 'use strict';
 
 define([
