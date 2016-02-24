@@ -1,4 +1,4 @@
-///* global docCookies: true, Resizer: true */
+///* global docCookies: true */
 
 /**
  * @fileoverview
@@ -8,9 +8,8 @@
 'use strict';
 
 define([
-  '../libs/cookies',
   'resizer'
-], function(docCookies, Resizer) {
+], function(Resizer) {
   /** @enum {string} */
   var FileType = {
     'GIF': '',

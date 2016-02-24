@@ -1,6 +1,6 @@
 ///* global Gallery: true, Photo: true */
 
-/* global requirejs: true */
+///* global requirejs: true */
 
 'use strict';
 
