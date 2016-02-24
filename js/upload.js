@@ -1,4 +1,4 @@
-///* global docCookies: true */
+///* global docCookies: true, Resizer: true */
 
 /**
  * @fileoverview
