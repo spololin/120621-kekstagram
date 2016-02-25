@@ -128,14 +128,17 @@
    * Функция получения массива по ajax
    */
   function getPictures() {
+    var TIMEOUT_TIME = 10000; //таймаут для загрузки по JSON
     container.classList.add('pictures-loading');
     var xhr = new XMLHttpRequest();
     xhr.open('GET', '//o0.github.io/assets/json/pictures.json', true);
-    xhr.timeout = 10000;
+    xhr.timeout = TIMEOUT_TIME;
+    activeFilter = localStorage.getItem('filter') || 'filter-popular';
+    filters.querySelector('#' + activeFilter).checked = true;
 
     xhr.addEventListener('load', function(evt) {
       pictures = JSON.parse(evt.srcElement.response);
-      setActiveFilter(activeFilter);
+      setActiveFilter(activeFilter, true);
       container.classList.remove('pictures-loading');
       filters.classList.remove('hidden');
     });
@@ -152,10 +155,11 @@
   /**
    * Функция установки активного фильтра и отрисовки картинок по фильтру
    * @param id - устанавливаемый фильтр
+   * @param force - установка фильтра при загрузке по JSON
    */
-  function setActiveFilter(id) {
+  function setActiveFilter(id, force) {
 
-    if (activeFilter === id) {
+    if (activeFilter === id && !force) {
       return;
     }
 
@@ -191,6 +195,7 @@
     gallery.setPictures(filteredPictures);
     renderPictures(0, true);
     activeFilter = id;
+    localStorage.setItem('filter', id);
   }
 
   /**
