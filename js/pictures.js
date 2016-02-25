@@ -111,8 +111,8 @@ define([
       fragment.appendChild(elementPicture.element);
 
       elementPicture.onClick = function() {
-        gallery.setData(elementPicture.getData());
-        gallery.render();
+        gallery.data = elementPicture._data;
+        location.hash = '#photo' + '/' + picture.url;
       };
 
       return elementPicture;
@@ -134,13 +134,12 @@ define([
     var xhr = new XMLHttpRequest();
     xhr.open('GET', '//o0.github.io/assets/json/pictures.json', true);
     xhr.timeout = TIMEOUT_TIME;
-    activeFilter = localStorage.getItem('filter') || 'filter-popular';
+    activeFilter = localStorage.getItem('filter') || getDefaultFilter();
     filters.querySelector('#' + activeFilter).checked = true;
 
     xhr.addEventListener('load', function(evt) {
-      pictures = JSON.parse(evt.srcElement.response);
+      pictures = JSON.parse(evt.target.response);
       setActiveFilter(activeFilter, true);
-      setActiveFilter(getDefaultFilter(), true);
       container.classList.remove('pictures-loading');
       filters.classList.remove('hidden');
     });
@@ -172,8 +171,8 @@ define([
         break;
       case 'filter-new':
         /*
-        @var LAST_TWO_WEEK = 14 * 24 * 60 *60 * 1000 - 2 недели
-        @var ONE_DAY = 1 * 24 * 60 * 60 * 1000 - 1 день
+        LAST_TWO_WEEK = 14 * 24 * 60 *60 * 1000 - 2 недели
+        ONE_DAY = 1 * 24 * 60 * 60 * 1000 - 1 день
          */
         var TWO_WEEK = 1209600000;
         var ONE_DAY = 86400000;
@@ -197,6 +196,7 @@ define([
     gallery.setPictures(filteredPictures);
     renderPictures(0, true);
     activeFilter = id;
+    localStorage.setItem('filter', id);
   }
 
   /**
@@ -219,6 +219,24 @@ define([
     return defaultRadioItem;
   }
 
-  getPictures();
+  /**
+   * Определяет необходимость отображать галерею по хешу
+   */
+  function galleryFromHash() {
+    var matchedHash = location.hash.match(/#photo\/(\S+)/);
+    if (Array.isArray(matchedHash)) {
+      gallery.render(matchedHash[1]);
+    } else {
+      gallery.hide();
+    }
+  }
 
+  /**
+   * Событие изменения хэша в адресной строке
+   */
+  window.addEventListener('hashchange', function() {
+    galleryFromHash();
+  });
+
+  getPictures();
 });
