@@ -134,13 +134,12 @@ define([
     var xhr = new XMLHttpRequest();
     xhr.open('GET', '//o0.github.io/assets/json/pictures.json', true);
     xhr.timeout = TIMEOUT_TIME;
-    activeFilter = localStorage.getItem('filter') || 'filter-popular';
+    activeFilter = localStorage.getItem('filter') || getDefaultFilter();
     filters.querySelector('#' + activeFilter).checked = true;
 
     xhr.addEventListener('load', function(evt) {
       pictures = JSON.parse(evt.srcElement.response);
       setActiveFilter(activeFilter, true);
-      setActiveFilter(getDefaultFilter(), true);
       container.classList.remove('pictures-loading');
       filters.classList.remove('hidden');
     });
@@ -197,6 +196,7 @@ define([
     gallery.setPictures(filteredPictures);
     renderPictures(0, true);
     activeFilter = id;
+    localStorage.setItem('filter', id);
   }
 
   /**
