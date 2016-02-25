@@ -1,7 +1,9 @@
-/* global inherit: true, PhotoBase: true*/
 'use strict';
 
-(function() {
+define([
+  'inherit',
+  'photo-base'
+], function(inherit, PhotoBase) {
   /**
    * Конструктор фотографии в общем списке
    * @param {object} data - данные одной фотографии
@@ -84,5 +86,6 @@
   };
 
 
-  window.Photo = Photo;
-})();
+  return Photo;
+  //window.Photo = Photo;
+});

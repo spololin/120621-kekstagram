@@ -1,6 +1,6 @@
 'use strict';
 
-(function() {
+define(function() {
   /**
    * Базовый конструктор для фотографии - абстрактный класс
    * @constructor
@@ -57,5 +57,6 @@
    */
   PhotoBase.prototype.onClick = null;
 
-  window.PhotoBase = PhotoBase;
-})();
+  return PhotoBase;
+  //window.PhotoBase = PhotoBase;
+});

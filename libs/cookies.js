@@ -2,6 +2,8 @@
  * @fileoverview Библиотека для удобной работы с cookie.
  */
 
+'use strict';
+
 var docCookies = {
   /**
    * Возвращает значение cookie с переданным ключом sKey.

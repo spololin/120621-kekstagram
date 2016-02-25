@@ -1,8 +1,9 @@
-/* global Gallery: true, Photo: true */
-
 'use strict';
 
-(function() {
+define([
+  'gallery',
+  'photo'
+], function(Gallery, Photo) {
   /**
    * Контейнер для всех загруженных фотографий
    * @type {Element}
@@ -19,7 +20,7 @@
    * Активный фильтр
    * @type {string}
    */
-  var activeFilter = 'filter-popular';
+  var activeFilter;
 
   /**
    * Массив объектов загруженных фотографий
@@ -139,6 +140,7 @@
     xhr.addEventListener('load', function(evt) {
       pictures = JSON.parse(evt.srcElement.response);
       setActiveFilter(activeFilter, true);
+      setActiveFilter(getDefaultFilter(), true);
       container.classList.remove('pictures-loading');
       filters.classList.remove('hidden');
     });
@@ -155,7 +157,7 @@
   /**
    * Функция установки активного фильтра и отрисовки картинок по фильтру
    * @param id - устанавливаемый фильтр
-   * @param force - установка фильтра при загрузке по JSON
+   * @param force - зашита от повторного выбора фильтра
    */
   function setActiveFilter(id, force) {
 
@@ -195,7 +197,6 @@
     gallery.setPictures(filteredPictures);
     renderPictures(0, true);
     activeFilter = id;
-    localStorage.setItem('filter', id);
   }
 
   /**
@@ -208,6 +209,16 @@
     }
   });
 
+  /**
+   * Определяет первый фильтр в коллекции по умолчанию
+   * @returns {string}
+   */
+  function getDefaultFilter() {
+    var defaultRadioItem = filters.getElementsByTagName('input')[0].id;
+    activeFilter = defaultRadioItem;
+    return defaultRadioItem;
+  }
+
   getPictures();
 
-})();
+});

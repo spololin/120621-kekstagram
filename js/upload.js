@@ -1,5 +1,3 @@
-/* global docCookies: true, Resizer : true */
-
 /**
  * @fileoverview
  * @author Igor Alexeenko (o0)
@@ -7,7 +5,9 @@
 
 'use strict';
 
-(function() {
+define([
+  'resizer'
+], function(Resizer) {
   /** @enum {string} */
   var FileType = {
     'GIF': '',
@@ -288,7 +288,7 @@
     cleanupResizer();
     updateBackground();
 
-    docCookies.setItem('filter', getRadioButton(), getDiffDate());
+    window.docCookies.setItem('filter', getRadioButton(), getDiffDate());
 
     filterForm.classList.add('invisible');
     uploadForm.classList.remove('invisible');
@@ -339,9 +339,9 @@
   function setRadioButton() {
     var elements = filterForm['upload-filter'];
     for (var i = 0; i < elements.length; i++) {
-      if (elements[i].value === docCookies.getItem('filter')) {
+      if (elements[i].value === window.docCookies.getItem('filter')) {
         elements[i].checked = true;
-        filterImage.className = 'filter-image-preview ' + 'filter-' + docCookies.getItem('filter');
+        filterImage.className = 'filter-image-preview ' + 'filter-' + window.docCookies.getItem('filter');
       }
     }
   }
@@ -378,4 +378,4 @@
   setRadioButton();
   cleanupResizer();
   updateBackground();
-})();
+});
