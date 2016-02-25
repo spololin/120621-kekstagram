@@ -20,5 +20,4 @@ define(function() {
   }
 
   return inherit;
-  //window.inherit = inherit;
 });
