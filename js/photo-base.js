@@ -58,5 +58,4 @@ define(function() {
   PhotoBase.prototype.onClick = null;
 
   return PhotoBase;
-  //window.PhotoBase = PhotoBase;
 });

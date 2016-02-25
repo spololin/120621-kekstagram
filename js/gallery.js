@@ -92,11 +92,12 @@ define(function() {
 
   /**
    * Вызывающий метод для отображения галереи
+   * @param {string} Path
    * @method
    */
-  Gallery.prototype.render = function() {
+  Gallery.prototype.render = function(Path) {
     this.show();
-    this.setCurrentPicture(this._currentPicture);
+    this.setCurrentPicture(Path);
   };
 
   /**
@@ -130,7 +131,7 @@ define(function() {
    * @private
    */
   Gallery.prototype._onCloseClick = function() {
-    this.hide();
+    location.hash = '';
   };
 
   /**
@@ -153,7 +154,7 @@ define(function() {
    */
   Gallery.prototype._onDocumentKeyDown = function(evt) {
     if (evt.keyCode === 27) {
-      this.hide();
+      location.hash = '';
     } else {
       if (evt.keyCode === 39) {
         this.setNextPictureIndex();
@@ -178,14 +179,20 @@ define(function() {
   /**
    * Метод устанавливает фотографию, которую отображает галерея
    * @method
-   * @param {number} index - индекс фотографии в массиве
+   * @param {number|string} index - индекс фотографии в массиве или путь до фотографии
    */
   Gallery.prototype.setCurrentPicture = function(index) {
-    this._photo.src = this.pictures[index].url;
-    this._likes.querySelector('.likes-count').textContent = this.pictures[index].likes;
-    this._comments.querySelector('.comments-count').textContent = this.pictures[index].comments;
+    var picture;
+    if (typeof index === 'number') {
+      picture = this.pictures[index];
+    } else {
+      picture = this.pictures[this.getNumberPicture(index)];
+    }
+    this._photo.src = picture.url;
+    this._likes.querySelector('.likes-count').textContent = picture.likes;
+    this._comments.querySelector('.comments-count').textContent = picture.comments;
 
-    if (this.pictures[index].setLike === true) {
+    if (picture.setLike === true) {
       this._likesCount.classList.add('likes-count-liked');
     } else {
       this._likesCount.classList.remove('likes-count-liked');
@@ -223,7 +230,7 @@ define(function() {
    */
   Gallery.prototype.setNextPictureIndex = function() {
     if (this.pictures[this._currentPicture + 1]) {
-      this._currentPicture++;
+      this.setHash(this.pictures[++this._currentPicture].url);
     }
   };
 
@@ -233,7 +240,7 @@ define(function() {
    */
   Gallery.prototype.setPrevPictureIndex = function() {
     if (this.pictures[this._currentPicture - 1]) {
-      this._currentPicture--;
+      this.setHash(this.pictures[--this._currentPicture].url);
     }
   };
 
@@ -257,6 +264,14 @@ define(function() {
     }
   };
 
+  /**
+   * Устанавливает хеш в адресную строку
+   * @param {string} hash
+   * @private
+   */
+  Gallery.prototype.setHash = function(hash) {
+    location.hash = hash ? 'photo/' + hash : '';
+  };
+
   return Gallery;
-  //window.Gallery = Gallery;
 });
