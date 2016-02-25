@@ -121,10 +121,6 @@ define(function() {
       //добавление маски
       this.addMask(this._ctx.lineWidth, sizeRect);
 
-      // Отрисовка прямоугольника, обозначающего область изображения после
-      // кадрирования. Координаты задаются от центра.
-      //this._ctx.strokeRect(sizeRect.rectX, sizeRect.rectY, sizeRect.rectW, sizeRect.rectH);
-
       // Отрисовка прямоугольника из кружков, обозначающего область изображения после
       // кадрирования. Координаты задаются от центра.
       this.drawCircleBorder(sizeRect);
@@ -421,5 +417,4 @@ define(function() {
   };
 
   return Resizer;
-  //window.Resizer = Resizer;
 });

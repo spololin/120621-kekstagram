@@ -85,7 +85,5 @@ define([
     this.element.removeEventListener('click', this._onPhotoClick);
   };
 
-
   return Photo;
-  //window.Photo = Photo;
 });
