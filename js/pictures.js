@@ -20,7 +20,7 @@ define([
    * Активный фильтр
    * @type {string}
    */
-  var activeFilter = 'filter-popular';
+  var activeFilter;
 
   /**
    * Массив объектов загруженных фотографий
@@ -136,7 +136,7 @@ define([
 
     xhr.addEventListener('load', function(evt) {
       pictures = JSON.parse(evt.srcElement.response);
-      setActiveFilter(activeFilter, true);
+      setActiveFilter(getDefaultFilter(), true);
       container.classList.remove('pictures-loading');
       filters.classList.remove('hidden');
     });
@@ -153,6 +153,7 @@ define([
   /**
    * Функция установки активного фильтра и отрисовки картинок по фильтру
    * @param id - устанавливаемый фильтр
+   * @param force - зашита от повторного выбора фильтра
    */
   function setActiveFilter(id, force) {
 
@@ -203,6 +204,16 @@ define([
       setActiveFilter(clickedElement.id);
     }
   });
+
+  /**
+   * Определяет первый фильтр в коллекции по умолчанию
+   * @returns {string}
+   */
+  function getDefaultFilter() {
+    var defaultRadioItem = filters.getElementsByTagName('input')[0].id;
+    activeFilter = defaultRadioItem;
+    return defaultRadioItem;
+  }
 
   getPictures();
 
