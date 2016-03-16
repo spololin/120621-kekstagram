@@ -2,4 +2,3 @@
 
 require(['pictures']);
 require(['upload']);
-require(['download']);
